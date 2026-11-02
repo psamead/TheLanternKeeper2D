@@ -57,3 +57,8 @@ When transferring to the shared Obsidian knowledge base, preserve this as a proj
 - The previous fixed underline offset (`-35`) crossed the lower edge of Cinzel glyphs. `TMP_Text.textBounds` after `ForceMeshUpdate()` gives the rendered glyph bounds; transform those points into the underline parent's local space and leave an 8 UI-unit gap. Play Mode measured the resulting gap as 8.
 - Added small hover and selected AudioClips synthesized into memory at runtime and played via one 2D AudioSource on the menu controller. Pointer-enter and click-confirm Play Mode paths both reported active playback; the Settings confirmation also opened the panel. This verifies clip triggering, not physical speaker audibility or hardware mouse input.
 - Unity refreshed the TMP fallback font asset during the Editor run. Its generated changes were restored because they were unrelated to the menu feature. Keep commits limited to the requested menu scripts and `01_StartMenu` scene; preserve the pre-existing untracked TMP Extras and obsolete font assets.
+
+## 2026-11-03 — Home placeholder label correction
+
+- The user asked to change the visible `02` to `01` in the screenshot. The intended edit was only `PlaceholderLabel` in `02_Home`: changed `02_Home` to `01_Home` and preserved the `Esc → menu` helper line and the scene asset name.
+- `01_StartMenu` was marked dirty in the Editor despite no tracked file diff. Left that scene untouched and opened `02_Home` additively, then saved only `02_Home`. When an unrelated scene is dirty, avoid switching away or saving it while making a focused scene change.

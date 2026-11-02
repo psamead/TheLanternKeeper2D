@@ -31,3 +31,23 @@ Append dated, evidence-based entries when an implementation lesson or meaningful
 ## Suggested knowledge-base placement
 
 When transferring to the shared Obsidian knowledge base, preserve this as a project experience/reference note linked from that vault's project index. Keep active instructions in the repository `AGENTS.md` and current handoff; label this record as historical/reference material where appropriate.
+
+## 2026-11-03 — Unity Editor routing mismatch
+
+- The workspace may have a target project's Unity process open while the Unity MCP bridge is attached to a different project. Before any mutation, run a read-only Editor probe and confirm `Application.dataPath` matches the repository path.
+- Here, the probe returned `TheFairyHill2D` while the requested project was `TheLanternKeeper2D`. Editor-side scene work was stopped. A failed command had created an empty `Assets/_Project/Scenes` folder plus its `.meta` in FairyHill; cleanup attempts were rejected by the UI/MCP safety layer, so verify and remove that empty accidental folder when the correct project owner can do so.
+- The initial baseline commit `7d8ffdf` was pushed successfully after retrying with Git HTTP/1.1. The menu implementation itself remains uncompiled and unvalidated; do not confuse publishing the baseline with completing the feature.
+
+## 2026-11-03 — TMP resource import requires Editor UI
+
+- After the Unity MCP target was corrected to `TheLanternKeeper2D`, Editor APIs created and ordered the four scenes and compiled the menu scripts.
+- TMP Essential Resources were absent. The MCP can open the TMP importer window but rejects Unity package import and asset deletion because those calls require user interaction. A placeholder Settings asset and generated Cinzel asset were created during diagnosis but are incomplete; do not treat that font as valid.
+- Next: remove the temporary `Assets/TextMesh Pro/` folder in the Unity Project window, import TMP Essentials from `Window > TextMeshPro > Import TMP Essential Resources`, then generate the SDF font and verify its atlas before Play Mode.
+
+## 2026-11-03 — Main menu TMP and Play Mode verification
+
+- The user imported TMP Essentials through the Unity Editor. Verified the standard Liberation Sans SDF, EmojiOne sprite asset, default style sheet, and TMP default font through `AssetDatabase` and `TMP_Settings`.
+- Generated a dynamic Cinzel SDF with a valid atlas/material and 75 character records at `Assets/_Project/Fonts/Cinzel SDF Generated.asset`; assigned it to all six TMP labels across `01_StartMenu`, `02_Home`, `03_Harbor`, and `04_EndCard`.
+- Play Mode rendered an all-black background despite assigned sprites. The `BG` and `LeftDark` full-screen Canvas images each had inverted vertical anchors and a negative 1080 px rect height. Resetting anchors to `(0,0)`–`(1,1)` and offsets to zero produced a 1920×1080 Game View matching the menu mock.
+- Editor-driven Play Mode checks passed: Down selected Settings, Enter opened its panel, pointer-enter selected Settings, Play loaded `02_Home`, and a simulated Escape returned to `01_StartMenu`; Quit logged its intended Editor message. No real hardware mouse session or standalone player build was run.
+- The old incomplete `Assets/_Project/Fonts/Cinzel SDF.asset` remains locally present but unreferenced. Unity MCP rejected its deletion as an interactive Editor action; remove it via the Project window before staging if still present. Keep the imported TMP Essentials assets.

@@ -14,6 +14,6 @@ public sealed class MenuItemHover : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (owner != null) owner.Select(index);
+        if (owner != null) owner.SelectFromPointer(index);
     }
 }

@@ -64,3 +64,9 @@ Scene: 01_StartMenu
 
 - 在 `TechnicalArt/MENU_UNITY_PROGRESS.md`（新建）写：完成了什么、Play Mode 里实际看过哪些、还没验证什么。
 - 在 `ART_HANDOFF.md` §10 加一行日期记录；在 `DEMO_IMPLEMENTATION_PLAN.md` §7 只给 Play Mode 验证过的项打 ☑。
+
+## 7. 后续交互反馈更新（2026-11-03）
+
+- 用户要求选中下划线位于字形下方，并为鼠标悬停与确认选择添加程序化音效。`MainMenuController` 根据 TMP 渲染字形边界定位下划线，字形与线之间留 8 UI 单位。
+- `ProceduralMenuAudio` 在运行时生成短悬停音和较暖的确认音，通过菜单控制器上的单个 2D `AudioSource` 播放；没有导入外部音频文件。
+- Play Mode 中调用指针进入与 Settings 确认路径，观察到 AudioSource 播放且 Settings 面板打开。未用真实鼠标或扬声器做人工听测，也未构建独立 Player。

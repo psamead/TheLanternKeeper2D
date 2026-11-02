@@ -12,6 +12,8 @@ public sealed class MainMenuController : MonoBehaviour
     [SerializeField] private RectTransform selectionIcon;
     [SerializeField] private RectTransform underline;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private ProceduralMenuAudio menuAudio;
+    [SerializeField, Min(0f)] private float underlineGap = 8f;
     [SerializeField] private Color normalColor = new Color32(0xF2, 0xEB, 0xDD, 0xFF);
     [SerializeField] private Color selectedColor = new Color32(0xE8, 0xB4, 0x5A, 0xFF);
     private int selectedIndex;
@@ -25,8 +27,10 @@ public sealed class MainMenuController : MonoBehaviour
             var hover = buttons[i].gameObject.AddComponent<MenuItemHover>();
             hover.Initialize(this, index);
         }
+        if (menuAudio == null) menuAudio = GetComponent<ProceduralMenuAudio>();
+        if (menuAudio == null) menuAudio = gameObject.AddComponent<ProceduralMenuAudio>();
         if (settingsPanel != null) settingsPanel.SetActive(false);
-        Select(0);
+        SetSelection(0, false);
     }
 
     private void Update()
@@ -43,21 +47,63 @@ public sealed class MainMenuController : MonoBehaviour
 }
     public void Select(int index)
     {
+        SetSelection(index, true);
+    }
+
+    public void SelectFromPointer(int index)
+    {
+        SetSelection(index, true);
+    }
+
+    private void SetSelection(int index, bool playHoverSound)
+    {
         if (buttons.Count == 0) return;
-        selectedIndex = Mathf.Clamp(index, 0, buttons.Count - 1);
+        int nextIndex = Mathf.Clamp(index, 0, buttons.Count - 1);
+        bool changed = nextIndex != selectedIndex;
+        selectedIndex = nextIndex;
         for (int i = 0; i < labels.Count; i++) labels[i].color = i == selectedIndex ? selectedColor : normalColor;
         RectTransform item = buttons[selectedIndex].GetComponent<RectTransform>();
         if (selectionIcon != null) selectionIcon.anchoredPosition = new Vector2(-44f, item.anchoredPosition.y);
         if (underline != null && selectedIndex < labels.Count)
         {
-            underline.anchoredPosition = new Vector2(0f, item.anchoredPosition.y - 35f);
-            underline.sizeDelta = new Vector2(labels[selectedIndex].preferredWidth, 3f);
+            TMP_Text label = labels[selectedIndex];
+            label.ForceMeshUpdate();
+            Bounds textBounds = label.textBounds;
+            if (textBounds.size.x <= Mathf.Epsilon)
+                textBounds = new Bounds(Vector3.zero, new Vector3(label.preferredWidth, label.preferredHeight, 0f));
+
+            RectTransform underlineParent = underline.parent as RectTransform;
+            if (underlineParent != null)
+            {
+                Vector3 leftWorld = label.rectTransform.TransformPoint(
+                    new Vector3(textBounds.min.x, textBounds.min.y - underlineGap, 0f));
+                Vector3 rightWorld = label.rectTransform.TransformPoint(
+                    new Vector3(textBounds.max.x, textBounds.min.y - underlineGap, 0f));
+                Vector3 leftLocal = underlineParent.InverseTransformPoint(leftWorld);
+                Vector3 rightLocal = underlineParent.InverseTransformPoint(rightWorld);
+                underline.anchoredPosition = LocalToAnchoredPosition(
+                    underline, new Vector2(leftLocal.x, leftLocal.y));
+                underline.sizeDelta = new Vector2(Mathf.Abs(rightLocal.x - leftLocal.x), 3f);
+            }
         }
+        if (changed && playHoverSound && menuAudio != null) menuAudio.PlayHover();
+    }
+
+    private static Vector2 LocalToAnchoredPosition(RectTransform rectTransform, Vector2 parentLocalPosition)
+    {
+        RectTransform parent = rectTransform.parent as RectTransform;
+        if (parent == null) return parentLocalPosition;
+
+        Vector2 anchor = Vector2.Scale(rectTransform.anchorMin, Vector2.one - rectTransform.pivot)
+            + Vector2.Scale(rectTransform.anchorMax, rectTransform.pivot);
+        Vector2 anchorReference = parent.rect.min + Vector2.Scale(parent.rect.size, anchor);
+        return parentLocalPosition - anchorReference;
     }
 
     private void Confirm(int index)
     {
-        Select(index);
+        SetSelection(index, false);
+        if (menuAudio != null) menuAudio.PlaySelected();
         switch (index)
         {
             case 0: SceneLoader.Load("02_Home"); break;

@@ -18,7 +18,7 @@
 - 角色：2D Animation + PSD Importer（`.psb` 骨骼）。美术未到位前用白色胶囊 0.8×1.6。
 
 ## 范围
-- 只做 Demo：4 个 Scene（01_StartMenu → 02_Home → 03_Harbor → 04_EndCard），5–8 分钟。
+- 只做 Demo：4 个 Scene（00_StartMenu → 01_Home → 02_Harbor → 03_EndCard），5–8 分钟。
 - 不做：灯油、检查点、敌人、潮汐、多结局、存档。新增内容先对照 DEMO_IMPLEMENTATION_PLAN §2。
 
 ## 工作规则

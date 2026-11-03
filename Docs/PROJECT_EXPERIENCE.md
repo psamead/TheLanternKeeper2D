@@ -76,3 +76,7 @@ When transferring to the shared Obsidian knowledge base, preserve this as a proj
 - The `01_Home` placeholder TMP label was visible over the Start Menu while both scenes were open additively in the Editor. Clear its text in the Home scene when the placeholder is no longer desired; preserve the scene's functional camera and UI objects.
 - Duplicate AudioListener and EventSystem warnings in this state were caused by both scenes being loaded together. Check each scene independently before changing listener or EventSystem setup.
 - Saved and verified the label text was empty and the scene clean. Commit `7415565` was pushed to GitHub `main`.
+## 2026-11-03 — Audio fade startup verification limit
+
+- Serialize Play On Awake music-source volumes at zero when a script fades them up, avoiding an initial full-volume frame before `Start` applies the fade.
+- In this Editor-driven check, both sources reached their configured target volumes but later reported `isPlaying == false` and zero output samples. The Settings Escape back cue did trigger. Treat music playback as unresolved until it is checked with the Unity Game view focused and/or heard through speakers; source volume alone does not prove playback.

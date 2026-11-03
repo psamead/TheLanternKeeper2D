@@ -6,6 +6,6 @@ public sealed class BackToMenu : MonoBehaviour
     private void Update()
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-            SceneLoader.Load("01_StartMenu");
+            SceneLoader.Load("00_StartMenu");
     }
 }

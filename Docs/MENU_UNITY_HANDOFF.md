@@ -39,7 +39,7 @@
 ## 4. 场景结构
 
 ```
-Scene: 01_StartMenu
+Scene: 00_StartMenu
 ├─ Main Camera（正交，唯一 AudioListener）
 └─ Canvas
     ├─ BG（Image，MENU_L0_BG_1920）
@@ -52,7 +52,8 @@ Scene: 01_StartMenu
 ```
 
 - 交互：W/S 或 ↑/↓ 切换；鼠标悬停切换选中；Enter / 空格 / 左键确认。
-- 功能：Play → 加载 `02_Home`（空场景占位即可）；Settings → 空面板占位（Esc 关闭）；Quit → `Application.Quit()`（编辑器里打印日志）。
+- 场景顺序：`00_StartMenu` → `01_Home` → `02_Harbor` → `03_EndCard`。
+- 功能：Play → 加载 `01_Home`（空场景占位即可）；Settings → 空面板占位（Esc 关闭）；Quit → `Application.Quit()`（编辑器里打印日志）。
 
 ## 5. 暂时不做
 
@@ -70,3 +71,12 @@ Scene: 01_StartMenu
 - 用户要求选中下划线位于字形下方，并为鼠标悬停与确认选择添加程序化音效。`MainMenuController` 根据 TMP 渲染字形边界定位下划线，字形与线之间留 8 UI 单位。
 - `ProceduralMenuAudio` 在运行时生成短悬停音和较暖的确认音，通过菜单控制器上的单个 2D `AudioSource` 播放；没有导入外部音频文件。
 - Play Mode 中调用指针进入与 Settings 确认路径，观察到 AudioSource 播放且 Settings 面板打开。未用真实鼠标或扬声器做人工听测，也未构建独立 Player。
+
+## 8. 场景编号与自然菜单音频（2026-11-03）
+
+- Unity 场景现为 `00_StartMenu` → `01_Home` → `02_Harbor` → `03_EndCard`，Build Settings 顺序与文件名一致；通过 Unity 重命名，GUID 保持不变。
+- `MainMenuController` Play 路由到 `01_Home`，Home 的 `BackToMenu` 路由到 `00_StartMenu`；Harbor / EndCard 占位标题编号已同步。
+- 新增 `MenuAudio` 使用三段循环轮换的悬停 OGG（避免连续重复）、确认音与设置关闭返回音；单个 2D AudioSource，悬停音轻微变调。
+- `MenuMusic` 在 Start Menu 播放 80 秒循环音乐和 60 秒循环海风；两者淡入 2 秒。Play 确认音播放完后，音乐与环境声淡出约 1 秒，再加载 `01_Home`。
+- OGG 导入设置：BGM/ambience 为 Streaming、Vorbis 70、立体声；BGM 后台加载。SFX 为 Decompress On Load、Vorbis 70、预加载、立体声。Start Menu 仅 Main Camera 有一个 AudioListener。
+- Editor Play Mode 已验证 Play 过渡到 `01_Home`、Escape 返回 `00_StartMenu`，并观察两路音乐源运行。没有物理扬声器听测、80 秒循环点人工监听或独立构建。

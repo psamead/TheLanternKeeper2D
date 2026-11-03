@@ -63,3 +63,10 @@ When transferring to the shared Obsidian knowledge base, preserve this as a proj
 - The user asked to change the visible `02` to `01` in the screenshot. The intended edit was only `PlaceholderLabel` in `02_Home`: changed `02_Home` to `01_Home` and preserved the `Esc → menu` helper line and the scene asset name.
 - `01_StartMenu` was marked dirty in the Editor despite no tracked file diff. Left that scene untouched and opened `02_Home` additively, then saved only `02_Home`. When an unrelated scene is dirty, avoid switching away or saving it while making a focused scene change.
 - The correction is mirrored in shared `TechnicalArt/MENU_UNITY_PROGRESS.md` and `ART_HANDOFF.md` §10 for agents working from the network folder.
+
+## 2026-11-03 — Scene renumbering and menu audio
+
+- Renamed scenes through Unity `AssetDatabase` so their `.meta` GUIDs remained stable; verified Build Settings paths/order and changed only the Harbor/EndCard visible labels. Update script scene names and dated current handoff summaries while retaining older logs as history.
+- Replaced generated beep code with assigned OGG assets. Configure audio importer via `AudioImporter.defaultSampleSettings`; on Unity 6.3, `preloadAudioData` needs serialized importer property access rather than the deprecated direct API. Verify `loadInBackground`, force-to-mono, and 2D importer settings separately.
+- Music and ambience can share one scene GameObject while using two looping 2D AudioSources. Fade from zero in `Start`; when confirming a route, allow the one-shot confirmation to finish, fade music/ambience, then load. A live Editor-driven Play test confirmed `01_Home` and Escape return to `00_StartMenu`.
+- Programmatic clip playback and source time/volume checks establish wiring and transition behavior, not actual audibility, perceived mix quality, or a seamless loop. Record physical listening and long loop checks as unverified unless someone listens.

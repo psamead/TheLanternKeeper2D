@@ -6,16 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/Scenes/01_StartMenu.unity
+    path: Assets/_Project/Scenes/00_StartMenu.unity
     guid: 355a3e12ff6fbfd4d8b296fade17254a
   - enabled: 1
-    path: Assets/_Project/Scenes/02_Home.unity
+    path: Assets/_Project/Scenes/01_Home.unity
     guid: ea03b4df3303eef45927f30132fd76c1
   - enabled: 1
-    path: Assets/_Project/Scenes/03_Harbor.unity
+    path: Assets/_Project/Scenes/02_Harbor.unity
     guid: 22482b813fb02074a85e11ef8a1d0485
   - enabled: 1
-    path: Assets/_Project/Scenes/04_EndCard.unity
+    path: Assets/_Project/Scenes/03_EndCard.unity
     guid: 9c553edf91d253442bef8888ec87f09b
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

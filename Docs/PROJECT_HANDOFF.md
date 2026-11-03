@@ -22,7 +22,7 @@ Last reviewed: 2026-11-03
 
 ## Current goal and boundary
 
-The project is a short 5–8 minute demo with four scenes: `01_StartMenu` → `02_Home` → `03_Harbor` → `04_EndCard`. Core mechanic: switch between Present and Memory world layers with the lantern. Keep work within the accepted scope in the shared plan. No oil, checkpoints, enemies, tides, multiple endings, or save system.
+The project is a short 5–8 minute demo with four scenes: `00_StartMenu` → `01_Home` → `02_Harbor` → `03_EndCard`. Core mechanic: switch between Present and Memory world layers with the lantern. Keep work within the accepted scope in the shared plan. No oil, checkpoints, enemies, tides, multiple endings, or save system.
 
 Work on one implementation checklist item at a time. Mark a checklist item complete only after the required Play Mode verification. Preserve existing scene/layout edits and unrelated working-tree changes. Do not claim compile, Play Mode, build, or publication validation unless each was actually performed.
 
@@ -48,6 +48,8 @@ Follow-up on 2026-11-03: the underline now tracks the selected TMP label's rende
 On 2026-11-03, at the user's request, changed only the placeholder text in scene `02_Home` from `02_Home` to `01_Home`, retaining the `Esc → menu` line and the actual scene filename. Saved and left `02_Home` active. The Editor reported `01_StartMenu` had unsaved in-memory scene state; it was left untouched while `02_Home` was opened additively. This correction is now also recorded in the shared menu progress file and `ART_HANDOFF.md` §10.
 
 The first visual capture exposed a black background; inspecting the Canvas showed both full-screen images had a 1920×−1080 rect. After the anchor fix, the captured Game View showed the intended background, title, lantern selection mark, and menu labels. Unity's camera-preview MCP call failed twice; Game View screenshot capture succeeded instead. The broken asset remains the only known cleanup item before final diff review and commit.
+
+On 2026-11-03, the four scenes were renamed inside Unity with their GUIDs preserved: `00_StartMenu`, `01_Home`, `02_Harbor`, `03_EndCard`. Build Settings list them in that enabled order. Script routes now target `01_Home` and `00_StartMenu`; Harbor and EndCard visible labels were updated to match, while Home remains `01_Home`. The Start Menu now uses imported OGG hover, confirm, and back cues plus looping BGM and sea/wind ambience with fades. Play Mode invoked the Play button, waited for the confirm cue and fade, then reached `01_Home`; an Input System Escape event returned to `00_StartMenu`. Clip references and source playback/fade state were observed in Editor, but physical speaker listening, the 80-second loop point, and standalone build were not verified. The scene was saved in Editor after wiring. The final audio commit is pending the requested user Ctrl+S confirmation.
 ## Existing local records
 
 - `Docs/2026-11-03_Unity_Init_MainMenu.md` — original initialization/menu request and acceptance details.

@@ -12,7 +12,7 @@ public sealed class MainMenuController : MonoBehaviour
     [SerializeField] private RectTransform selectionIcon;
     [SerializeField] private RectTransform underline;
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private ProceduralMenuAudio menuAudio;
+    [SerializeField] private MenuAudio menuAudio;
     [SerializeField, Min(0f)] private float underlineGap = 8f;
     [SerializeField] private Color normalColor = new Color32(0xF2, 0xEB, 0xDD, 0xFF);
     [SerializeField] private Color selectedColor = new Color32(0xE8, 0xB4, 0x5A, 0xFF);
@@ -27,8 +27,8 @@ public sealed class MainMenuController : MonoBehaviour
             var hover = buttons[i].gameObject.AddComponent<MenuItemHover>();
             hover.Initialize(this, index);
         }
-        if (menuAudio == null) menuAudio = GetComponent<ProceduralMenuAudio>();
-        if (menuAudio == null) menuAudio = gameObject.AddComponent<ProceduralMenuAudio>();
+        if (menuAudio == null) menuAudio = GetComponent<MenuAudio>();
+        if (menuAudio == null) menuAudio = gameObject.AddComponent<MenuAudio>();
         if (settingsPanel != null) settingsPanel.SetActive(false);
         SetSelection(0, false);
     }
@@ -39,6 +39,7 @@ public sealed class MainMenuController : MonoBehaviour
         if (Keyboard.current.escapeKey.wasPressedThisFrame && settingsPanel != null && settingsPanel.activeSelf)
         {
             settingsPanel.SetActive(false);
+            if (menuAudio != null) menuAudio.PlayBack();
             return;
         }
         if (Keyboard.current.upArrowKey.wasPressedThisFrame || Keyboard.current.wKey.wasPressedThisFrame) Select((selectedIndex + buttons.Count - 1) % buttons.Count);
@@ -103,10 +104,14 @@ public sealed class MainMenuController : MonoBehaviour
     private void Confirm(int index)
     {
         SetSelection(index, false);
-        if (menuAudio != null) menuAudio.PlaySelected();
+        if (menuAudio != null) menuAudio.PlayConfirm();
         switch (index)
         {
-            case 0: SceneLoader.Load("02_Home"); break;
+            case 0:
+                MenuMusic menuMusic = FindFirstObjectByType<MenuMusic>();
+                if (menuMusic != null) menuMusic.FadeOutAndLoad("01_Home");
+                else SceneLoader.Load("01_Home");
+                break;
             case 1: if (settingsPanel != null) settingsPanel.SetActive(true); break;
             case 2:
 #if UNITY_EDITOR

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "01_Home\nEsc \u2192 menu"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9682fc389fc5c834d938f31e8224cb29, type: 2}
   m_sharedMaterial: {fileID: 1004659275054853362, guid: 9682fc389fc5c834d938f31e8224cb29, type: 2}

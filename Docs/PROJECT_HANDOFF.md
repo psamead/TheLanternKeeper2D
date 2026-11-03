@@ -59,3 +59,5 @@ On 2026-11-03, the four scenes were renamed inside Unity with their GUIDs preser
 ## Handoff update rule
 
 Update this document when verified project state or workflow constraints change. Keep intended work, observed state, and validation evidence clearly distinct. Record the date and specific evidence; do not turn planned work into a completion claim.
+
+On 2026-11-03, removed the `01_Home` placeholder title and `Esc → menu` helper from `01_Home` at the user's request because they were appearing over the Start Menu while both scenes were loaded additively in the Editor. Cleared only `PlaceholderLabel`, saved the scene, and verified its TMP text is empty and the scene is clean. The duplicate listener/EventSystem warnings in that screenshot come from both scenes being loaded at once; each scene separately has one camera listener and one EventSystem.

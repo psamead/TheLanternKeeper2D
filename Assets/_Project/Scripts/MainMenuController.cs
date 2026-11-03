@@ -33,6 +33,23 @@ public sealed class MainMenuController : MonoBehaviour
         SetSelection(0, false);
     }
 
+#if UNITY_EDITOR
+    // Edit Mode preview: place the lantern icon, underline and label colours exactly as
+    // they look at runtime (first item selected), so the Scene / Game view is not misaligned.
+    // Only moves existing objects; adds no components and plays no sound.
+    private void OnValidate()
+    {
+        UnityEditor.EditorApplication.delayCall += PreviewSelectionInEditor;
+    }
+
+    private void PreviewSelectionInEditor()
+    {
+        if (this == null || Application.isPlaying || buttons.Count == 0) return;
+        selectedIndex = 0;
+        SetSelection(0, false);
+    }
+#endif
+
     private void Update()
     {
         if (buttons.Count == 0 || Keyboard.current == null) return;
@@ -48,12 +65,21 @@ public sealed class MainMenuController : MonoBehaviour
 }
     public void Select(int index)
     {
+        // Keyboard: one wave per move, no dwell loop.
+        if (menuAudio != null) menuAudio.SetPointerDwell(false);
         SetSelection(index, true);
     }
 
     public void SelectFromPointer(int index)
     {
         SetSelection(index, true);
+        // Mouse resting on an item: after a short delay, waves keep lapping softly.
+        if (menuAudio != null) menuAudio.SetPointerDwell(true);
+    }
+
+    public void PointerLeft(int index)
+    {
+        if (index == selectedIndex && menuAudio != null) menuAudio.SetPointerDwell(false);
     }
 
     private void SetSelection(int index, bool playHoverSound)

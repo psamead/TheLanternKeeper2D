@@ -6,7 +6,7 @@ public sealed class MenuMusic : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource ambienceSource;
     [SerializeField, Min(0f)] private float fadeInSeconds = 2f;
-    [SerializeField, Min(0f)] private float fadeOutSeconds = 1f;
+    [SerializeField, Min(0f)] private float fadeOutSeconds = 0.5f;
 
     private Coroutine transition;
 
@@ -38,11 +38,8 @@ public sealed class MenuMusic : MonoBehaviour
 
     private IEnumerator FadeOutThenLoad(string sceneName)
     {
-        // Keep the confirm clip audible before beginning the one-second music fade.
-        MenuAudio menuAudio = FindFirstObjectByType<MenuAudio>();
-        if (menuAudio != null && menuAudio.ConfirmSecondsRemaining > 0f)
-            yield return new WaitForSecondsRealtime(menuAudio.ConfirmSecondsRemaining);
-
+        // Short fade (0.5 s) then load. The confirm sound is played on a persistent
+        // object by MenuAudio, so its tail carries over into the next scene.
         float musicStart = musicSource != null ? musicSource.volume : 0f;
         float ambienceStart = ambienceSource != null ? ambienceSource.volume : 0f;
         float elapsed = 0f;

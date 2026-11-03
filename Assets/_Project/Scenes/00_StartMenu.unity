@@ -517,7 +517,7 @@ MonoBehaviour:
   musicSource: {fileID: 665786218}
   ambienceSource: {fileID: 665786217}
   fadeInSeconds: 2
-  fadeOutSeconds: 1
+  fadeOutSeconds: 0.5
 --- !u!82 &665786217
 AudioSource:
   m_ObjectHideFlags: 0

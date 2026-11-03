@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public sealed class MenuItemHover : MonoBehaviour, IPointerEnterHandler
+public sealed class MenuItemHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private MainMenuController owner;
     private int index;
@@ -15,5 +15,10 @@ public sealed class MenuItemHover : MonoBehaviour, IPointerEnterHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (owner != null) owner.SelectFromPointer(index);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (owner != null) owner.PointerLeft(index);
     }
 }

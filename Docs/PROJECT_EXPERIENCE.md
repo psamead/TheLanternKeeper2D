@@ -70,3 +70,9 @@ When transferring to the shared Obsidian knowledge base, preserve this as a proj
 - Replaced generated beep code with assigned OGG assets. Configure audio importer via `AudioImporter.defaultSampleSettings`; on Unity 6.3, `preloadAudioData` needs serialized importer property access rather than the deprecated direct API. Verify `loadInBackground`, force-to-mono, and 2D importer settings separately.
 - Music and ambience can share one scene GameObject while using two looping 2D AudioSources. Fade from zero in `Start`; when confirming a route, allow the one-shot confirmation to finish, fade music/ambience, then load. A live Editor-driven Play test confirmed `01_Home` and Escape return to `00_StartMenu`.
 - Programmatic clip playback and source time/volume checks establish wiring and transition behavior, not actual audibility, perceived mix quality, or a seamless loop. Record physical listening and long loop checks as unverified unless someone listens.
+
+## 2026-11-03 — Remove Home placeholder overlay
+
+- The `01_Home` placeholder TMP label was visible over the Start Menu while both scenes were open additively in the Editor. Clear its text in the Home scene when the placeholder is no longer desired; preserve the scene's functional camera and UI objects.
+- Duplicate AudioListener and EventSystem warnings in this state were caused by both scenes being loaded together. Check each scene independently before changing listener or EventSystem setup.
+- Saved and verified the label text was empty and the scene clean. Commit `7415565` was pushed to GitHub `main`.

@@ -79,4 +79,4 @@ When transferring to the shared Obsidian knowledge base, preserve this as a proj
 ## 2026-11-03 — Audio fade startup verification limit
 
 - Serialize Play On Awake music-source volumes at zero when a script fades them up, avoiding an initial full-volume frame before `Start` applies the fade.
-- In this Editor-driven check, both sources reached their configured target volumes but later reported `isPlaying == false` and zero output samples. The Settings Escape back cue did trigger. Treat music playback as unresolved until it is checked with the Unity Game view focused and/or heard through speakers; source volume alone does not prove playback.
+- In this Editor-driven check, both sources reached their configured target volumes but later reported `isPlaying == false` and zero output samples. The Settings Escape back cue did trigger. Treat music playback as unresolved until it is checked with the Unity Game view focused and/or heard through speakers; source volume alone does not prove playback. The serialized startup-volume correction was committed as `6f1ee1d` and pushed to GitHub `main`.

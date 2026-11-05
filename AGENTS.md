@@ -13,6 +13,7 @@
 ## 固定规格
 - Unity 6.3 LTS，URP 2D，PC（Windows）。游戏内文字只用英文。
 - 1920×1080，PPU 100，正交相机 Size 5.4；**不用** Pixel Perfect Camera。
+- 相机跟随用 **Cinemachine 3.1.7**（已安装）：Main Camera 挂 `CinemachineBrain`；每个场景一个 `CinemachineCamera`（Lens 正交 5.4）+ `CinemachinePositionComposer` + `CinemachineConfiner2D`。不要自己写跟随脚本。
 - 碰撞用 Tilemap：`Collision_Both / _Present / _Memory`（Grid Cell Size 1）；画面用分层美术（L0–L4）。
 - 两层世界：`LanternSwitch` 发事件 `OnWorldSwitched(bool isMemory)`；物体挂 `WorldLayerObject`（Present / Memory / Both）；冷暖改 Global Light 2D（现在 #8FA3BF 0.8，记忆 #FFD9A0 1.0）。
 - 角色：2D Animation + PSD Importer（`.psb` 骨骼）。美术未到位前用白色胶囊 0.8×1.6。

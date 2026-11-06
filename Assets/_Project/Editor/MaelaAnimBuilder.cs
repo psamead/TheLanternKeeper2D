@@ -57,18 +57,14 @@ public static class MaelaAnimBuilder
             ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern","localEulerAnglesRaw.z",new float[]{2f,8f,2f}),
             ("Hip/Body/Shoulder_L","localEulerAnglesRaw.z",new float[]{-14f,-18f,-14f}),
         });
-        clips["Maela_Lantern"] = Make("Maela_Lantern", false, new float[]{0f,0.22f,0.32f,0.75f,1.1f}, new (string,string,float[])[]{
-            ("Hip","m_LocalPosition.y",new float[]{0.565f,0.555f,0.57f,0.57f,0.565f}),
-            ("Hip/Body","localEulerAnglesRaw.z",new float[]{0f,-3f,4f,4f,0f}),
-            ("Hip/Body/Head","localEulerAnglesRaw.z",new float[]{0f,-2f,8f,8f,0f}),
-            ("Hip/Body/Shoulder_R","localEulerAnglesRaw.z",new float[]{0f,42f,66f,64f,0f}),
-            ("Hip/Body/Shoulder_R/Elbow_R","localEulerAnglesRaw.z",new float[]{0f,-6f,-10f,-10f,0f}),
-            ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern","localEulerAnglesRaw.z",new float[]{0f,-40f,-58f,-52f,0f}),
-            ("Hip/Body/Shoulder_L","localEulerAnglesRaw.z",new float[]{0f,-4f,-8f,-8f,0f}),
-            ("Hip/Thigh_L","localEulerAnglesRaw.z",new float[]{0f,-2f,-3f,-3f,0f}),
-            ("Hip/Thigh_R","localEulerAnglesRaw.z",new float[]{0f,2f,3f,3f,0f}),
-            ("Hip/Thigh_R/Shin_R","localEulerAnglesRaw.z",new float[]{0f,-2f,-3f,-3f,0f}),
-            ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern/LanternLight","LIGHT",new float[]{1.0f,1.2f,2.4f,1.8f,1.0f}),
+        clips["Maela_Lantern"] = Make("Maela_Lantern", false, new float[]{0f,0.2f,0.32f,0.75f,1.1f}, new (string,string,float[])[]{
+            ("Hip","m_LocalPosition.y",new float[]{0.565f,0.557f,0.569f,0.569f,0.565f}),
+            ("Hip/Body","localEulerAnglesRaw.z",new float[]{0f,-3f,-2f,-2f,0f}),
+            ("Hip/Body/Head","localEulerAnglesRaw.z",new float[]{0f,-2f,3f,3f,0f}),
+            ("Hip/Body/Shoulder_R","localEulerAnglesRaw.z",new float[]{0f,10f,16f,15f,0f}),
+            ("Hip/Body/Shoulder_R/Elbow_R","localEulerAnglesRaw.z",new float[]{0f,2f,3f,3f,0f}),
+            ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern","localEulerAnglesRaw.z",new float[]{0f,-6f,-19f,-14f,0f}),
+            ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern/LanternLight","LIGHT",new float[]{1.0f,1.3f,2.6f,1.9f,1.0f}),
         });
         var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(Dir + "Maela.controller");
         AddParam(ctrl, "Speed", AnimatorControllerParameterType.Float);

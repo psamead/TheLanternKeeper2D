@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: SB_Prologue
   m_EditorClassIdentifier: Assembly-CSharp::StoryboardData
   frames:
-  - image: {fileID: 4999090969406952902, guid: 48f2252ad2134bd4ab87e591c25e73a3, type: 3}
+  - image: {fileID: 2531644725651859670, guid: 6b5942b12d6a26540bb703ff86ccc80d, type: 3}
     video: {fileID: 0}
     caption: On the coast of Brittany, the old lighthouse has gone dark.
     duration: 6
     zoomFrom: 1
-    zoomTo: 1.1
+    zoomTo: 1.08
     panFrom: {x: 0, y: 0}
-    panTo: {x: 0.3, y: 0.2}
+    panTo: {x: -0.15, y: 0.05}
   - image: {fileID: -5848024082680170388, guid: ac1925c97c2ca684584cab61d04cf8f9, type: 3}
     video: {fileID: 0}
     caption: Each night the sea fog rolls in, and takes a little of what people remember.

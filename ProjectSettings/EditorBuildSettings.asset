@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/00_StartMenu.unity
     guid: 355a3e12ff6fbfd4d8b296fade17254a
   - enabled: 1
+    path: Assets/_Project/Scenes/00b_Prologue.unity
+    guid: 5118a9d1ed194e14496ddcbec879bfe7
+  - enabled: 1
     path: Assets/_Project/Scenes/01_Home.unity
     guid: ea03b4df3303eef45927f30132fd76c1
-  - enabled: 1
-    path: Assets/_Project/Scenes/02_Harbor.unity
-    guid: 22482b813fb02074a85e11ef8a1d0485
   - enabled: 1
     path: Assets/_Project/Scenes/03_EndCard.unity
     guid: 9c553edf91d253442bef8888ec87f09b

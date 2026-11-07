@@ -135,8 +135,8 @@ public sealed class MainMenuController : MonoBehaviour
         {
             case 0:
                 MenuMusic menuMusic = FindFirstObjectByType<MenuMusic>();
-                if (menuMusic != null) menuMusic.FadeOutAndLoad("01_Home");
-                else SceneLoader.Load("01_Home");
+                if (menuMusic != null) menuMusic.FadeOutAndLoad("00b_Prologue");
+                else SceneLoader.Load("00b_Prologue");
                 break;
             case 1: if (settingsPanel != null) settingsPanel.SetActive(true); break;
             case 2:

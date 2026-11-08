@@ -1,46 +1,7 @@
 {
  "ppu": 200,
- "applied_for": "Maela v1.6 (from v1.5 bounds)",
+ "applied_for": "Maela v1.6_m (from v1.6 bounds)",
  "layers": [
-  {
-   "name": "Hand_L",
-   "dx_px": 0.0,
-   "dy_px": 0.0
-  },
-  {
-   "name": "Leg_Upper_L",
-   "dx_px": 2.0,
-   "dy_px": -1.5
-  },
-  {
-   "name": "Leg_Lower_L",
-   "dx_px": 1.0,
-   "dy_px": -0.5
-  },
-  {
-   "name": "Boot_L",
-   "dx_px": 10.0,
-   "dy_px": -1.5
-  },
-  {
-   "name": "Leg_Upper_R",
-   "dx_px": -2.0,
-   "dy_px": 0.5
-  },
-  {
-   "name": "Leg_Lower_R",
-   "dx_px": -1.0,
-   "dy_px": -12.5
-  },
-  {
-   "name": "Boot_R",
-   "dx_px": -2.0,
-   "dy_px": 0.5
-  },
-  {
-   "name": "Dress",
-   "dx_px": 0.0,
-   "dy_px": 11.0
-  }
+  { "name": "Leg_Upper_L", "dx_px": 3.5, "dy_px": 0.0 }
  ]
 }

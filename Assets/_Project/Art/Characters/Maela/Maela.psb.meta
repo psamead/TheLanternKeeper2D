@@ -413,7 +413,7 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 368
-      width: 26
+      width: 33
       height: 41
     spriteID: 964791921d371ec44b86a15dcbf663f7
     spriteBone: []
@@ -628,16 +628,6 @@ ScriptedImporter:
     flatten: 0
     isImported: 1
     isVisible: 1
-  - name: Boot_R
-    spriteName: Boot_R
-    isGroup: 0
-    parentIndex: 0
-    spriteID: b112f8c5d43ae084b8308eea83aa987e
-    layerID: 81
-    mosaicPosition: {x: 150, y: 60}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
   - name: Leg_Lower_R
     spriteName: Leg_Lower_R
     isGroup: 0
@@ -665,6 +655,16 @@ ScriptedImporter:
     spriteID: a0fd118765e566145a4db87d31b7fd4c
     layerID: 84
     mosaicPosition: {x: 150, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Boot_R
+    spriteName: Boot_R
+    isGroup: 0
+    parentIndex: 0
+    spriteID: b112f8c5d43ae084b8308eea83aa987e
+    layerID: 81
+    mosaicPosition: {x: 150, y: 60}
     flatten: 0
     isImported: 1
     isVisible: 1

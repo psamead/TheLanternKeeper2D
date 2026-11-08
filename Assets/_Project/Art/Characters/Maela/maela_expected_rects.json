@@ -1,5 +1,5 @@
 {
- "psb": "Maela.psb",
+ "psb": "Maela_v1.6_m.psb",
  "canvasH": 320,
  "sprites": [
   {
@@ -102,7 +102,7 @@
   },
   {
    "name": "Leg_Upper_L",
-   "w": 26,
+   "w": 33,
    "h": 41,
    "posX": 31,
    "posY": 69

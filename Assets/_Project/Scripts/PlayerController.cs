@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-// Maela movement for the Home demo: A/D or arrows to move, Space/W/Up to jump, E = raise lantern.
+// Maela movement for the Home demo: A/D or arrows to move, Shift to walk, Space/W/Up to jump, E = raise lantern.
 // Drives Maela.controller parameters: Speed, Grounded, VelY, RaiseLantern.
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move")] public float moveSpeed = 3.2f;
+    [Header("Move")]
+    [FormerlySerializedAs("moveSpeed")] public float runSpeed = 3.2f;
+    public float walkSpeed = 1.8f;
     [Header("Jump")] public float jumpVelocity = 6.5f;
     public float coyoteTime = 0.08f, jumpBuffer = 0.1f;
     [Header("Ground check")] public LayerMask groundMask = ~0;
@@ -19,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public event System.Action OnJump;
     public event System.Action OnLanternRaised;
     public bool IsGrounded => grounded;
+    public bool IsWalking { get; private set; }
 
     void Awake()
     {
@@ -42,7 +46,10 @@ public class PlayerController : MonoBehaviour
             OnLanternRaised?.Invoke();
         }
 
-        rb.linearVelocity = new Vector2(x * moveSpeed, rb.linearVelocity.y);
+        bool slowWalk = k.leftShiftKey.isPressed || k.rightShiftKey.isPressed;
+        IsWalking = slowWalk && x != 0;
+        float horizontalSpeed = slowWalk ? walkSpeed : runSpeed;
+        rb.linearVelocity = new Vector2(x * horizontalSpeed, rb.linearVelocity.y);
         if (x != 0 && visual) { var s = visual.localScale; s.x = Mathf.Abs(s.x) * Mathf.Sign(x); visual.localScale = s; }
 
         if (Time.time - lastJumpPress < jumpBuffer && Time.time - lastGrounded < coyoteTime)

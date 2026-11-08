@@ -56,10 +56,11 @@ public sealed class MaelaAudio : MonoBehaviour
         wasGrounded = grounded;
     }
 
-    // Called by the Maela_Run animation event relay on the Animator child.
+    // Called by the Walk and Run animation event relay on the Animator child.
     public void PlayFootstep()
     {
-        if (controller != null && controller.IsGrounded) PlayRandom(footstepClips, 0.7f);
+        if (controller != null && controller.IsGrounded)
+            PlayRandom(footstepClips, controller.IsWalking ? 0.55f : 0.7f);
     }
 
     private void PlayJump() => PlayRandom(jumpClips, 0.8f);

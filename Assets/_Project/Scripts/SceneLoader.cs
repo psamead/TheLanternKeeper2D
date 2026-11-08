@@ -5,6 +5,19 @@ public static class SceneLoader
 {
     public static void Load(string sceneName)
     {
+        if (sceneName == "01_Home")
+        {
+            if (LevelLoader.Instance != null)
+                LevelLoader.Instance.LoadLevel(sceneName, "Spawn_Start");
+            else
+            {
+                var prologue = Object.FindFirstObjectByType<PrologueAudio>();
+                if (prologue != null) prologue.HandOffToCore();
+                LevelLoader.SetInitialLevel(sceneName, "Spawn_Start");
+                SceneManager.LoadScene("Core_Persistent", LoadSceneMode.Single);
+            }
+            return;
+        }
         if (Application.CanStreamedLevelBeLoaded(sceneName))
             SceneManager.LoadScene(sceneName);
         else

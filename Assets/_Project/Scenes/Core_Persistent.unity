@@ -1323,7 +1323,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd7e27533b42af4eaae34f03de75d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 3.2
+  runSpeed: 3.2
+  walkSpeed: 1.8
   jumpVelocity: 8
   coyoteTime: 0.08
   jumpBuffer: 0.1
@@ -1420,7 +1421,7 @@ MonoBehaviour:
   landClips:
   - {fileID: 8300000, guid: 52b79389b4cd6764cbdc15c242b849d9, type: 3}
   - {fileID: 8300000, guid: 9b14225caf47db74499c9a7de7eddc84, type: 3}
-  lanternRaiseClip: {fileID: 8300000, guid: f815ba2b4d6b6f74280d9e9561fcf39b, type: 3}
+  lanternRaiseClip: {fileID: 8300000, guid: 222a3e7b13cf4a84fb88d1eb49e4ca42, type: 3}
 --- !u!82 &1782533365
 AudioSource:
   m_ObjectHideFlags: 0

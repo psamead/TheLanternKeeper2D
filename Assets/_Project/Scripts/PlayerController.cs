@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Move")]
     [FormerlySerializedAs("moveSpeed")] public float runSpeed = 3.2f;
-    public float walkSpeed = 1.8f;
+    public float walkSpeed = 0.8f;
     [Header("Jump")] public float jumpVelocity = 6.5f;
     public float coyoteTime = 0.08f, jumpBuffer = 0.1f;
     [Header("Ground check")] public LayerMask groundMask = ~0;

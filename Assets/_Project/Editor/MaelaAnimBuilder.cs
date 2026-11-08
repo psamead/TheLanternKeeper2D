@@ -14,16 +14,16 @@ public static class MaelaAnimBuilder
     public static void Build()
     {
         var clips = new Dictionary<string, AnimationClip>();
-        clips["Maela_Walk"] = Make("Maela_Walk", true, new float[]{0f,0.225f,0.45f,0.675f,0.9f}, new (string,string,float[])[]{
-            ("Hip","m_LocalPosition.y",new float[]{0.559f,0.566f,0.559f,0.566f,0.559f}),
-            ("Hip/Body","localEulerAnglesRaw.z",new float[]{-1f,-2f,-1f,-2f,-1f}),
+        clips["Maela_Walk"] = Make("Maela_Walk", true, new float[]{0f,0.275f,0.55f,0.825f,1.1f}, new (string,string,float[])[]{
+            ("Hip","m_LocalPosition.y",new float[]{0.561f,0.564f,0.561f,0.564f,0.561f}),
+            ("Hip/Body","localEulerAnglesRaw.z",new float[]{-1f,-1f,-1f,-1f,-1f}),
             ("Hip/Body/Head","localEulerAnglesRaw.z",new float[]{1f,1f,1f,1f,1f}),
-            ("Hip/Thigh_R","localEulerAnglesRaw.z",new float[]{10f,0f,-9f,0f,10f}),
-            ("Hip/Thigh_R/Shin_R","localEulerAnglesRaw.z",new float[]{-3f,-2f,-8f,-18f,-3f}),
-            ("Hip/Thigh_R/Shin_R/Foot_R","localEulerAnglesRaw.z",new float[]{3f,0f,-5f,-3f,3f}),
-            ("Hip/Thigh_L","localEulerAnglesRaw.z",new float[]{-9f,0f,10f,0f,-9f}),
-            ("Hip/Thigh_L/Shin_L","localEulerAnglesRaw.z",new float[]{-8f,-18f,-3f,-2f,-8f}),
-            ("Hip/Thigh_L/Shin_L/Foot_L","localEulerAnglesRaw.z",new float[]{-5f,-3f,3f,0f,-5f}),
+            ("Hip/Thigh_R","localEulerAnglesRaw.z",new float[]{12f,0f,-11f,0f,12f}),
+            ("Hip/Thigh_R/Shin_R","localEulerAnglesRaw.z",new float[]{-2f,-2f,-6f,-16f,-2f}),
+            ("Hip/Thigh_R/Shin_R/Foot_R","localEulerAnglesRaw.z",new float[]{2f,0f,-4f,-2f,2f}),
+            ("Hip/Thigh_L","localEulerAnglesRaw.z",new float[]{-11f,0f,12f,0f,-11f}),
+            ("Hip/Thigh_L/Shin_L","localEulerAnglesRaw.z",new float[]{-6f,-16f,-2f,-2f,-6f}),
+            ("Hip/Thigh_L/Shin_L/Foot_L","localEulerAnglesRaw.z",new float[]{-4f,-2f,2f,0f,-4f}),
             ("Hip/Body/Shoulder_R","localEulerAnglesRaw.z",new float[]{-2f,1f,5f,1f,-2f}),
             ("Hip/Body/Shoulder_R/Elbow_R","localEulerAnglesRaw.z",new float[]{5f,6f,5f,6f,5f}),
             ("Hip/Body/Shoulder_R/Elbow_R/Wrist_R/Lantern","localEulerAnglesRaw.z",new float[]{5f,1f,-5f,-1f,5f}),
@@ -145,7 +145,7 @@ public static class MaelaAnimBuilder
             AnimationUtility.SetAnimationEvents(clip, new[]
             {
                 new AnimationEvent { time = 0f, functionName = "PlayFootstep" },
-                new AnimationEvent { time = 0.45f, functionName = "PlayFootstep" }
+                new AnimationEvent { time = 0.55f, functionName = "PlayFootstep" }
             });
         }
         else if (name == "Maela_Run")

@@ -1324,7 +1324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   runSpeed: 3.2
-  walkSpeed: 1.8
+  walkSpeed: 0.8
   jumpVelocity: 8
   coyoteTime: 0.08
   jumpBuffer: 0.1

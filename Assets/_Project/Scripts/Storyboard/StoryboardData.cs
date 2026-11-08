@@ -19,6 +19,14 @@ public class StoryboardData : ScriptableObject
         public TextAlignmentOptions align = TextAlignmentOptions.Center;
         public bool wordWrap = true;
         [Min(0.01f)] public float fontScale = 1f;
+        [Header("Caption appearance")]
+        public Color captionColor = Color.white;
+        public bool overrideCaptionColor;
+        public bool enableUnderlay;
+        public Color underlayColor = new Color(11f / 255f, 26f / 255f, 46f / 255f, 0.6f);
+        public Vector2 underlayOffset = new Vector2(0f, -0.5f);
+        public float underlayDilate = 0.2f;
+        public float underlaySoftness = 0.6f;
         [Header("Ken Burns (scale, normalized pan -1..1)")]
         public float zoomFrom = 1.0f, zoomTo = 1.12f;
         public Vector2 panFrom = Vector2.zero, panTo = Vector2.zero;

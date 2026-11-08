@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,11 +23,27 @@ public class StoryboardPlayer : MonoBehaviour
 
     bool skipFrame, skipAll; RawImage front, back;
     float baseCaptionFontSize;
+    Color baseCaptionColor;
+    Material baseCaptionMaterial;
+    readonly Dictionary<StoryboardData.Frame, Material> captionMaterials = new Dictionary<StoryboardData.Frame, Material>();
+
+    void Awake()
+    {
+        baseCaptionFontSize = captionText.fontSize;
+        baseCaptionColor = captionText.color;
+        baseCaptionMaterial = captionText.fontSharedMaterial;
+    }
 
     void Start()
     {
-        baseCaptionFontSize = captionText.fontSize;
         if (playOnStart) StartCoroutine(Play());
+    }
+
+    void OnDestroy()
+    {
+        foreach (var material in captionMaterials.Values)
+            if (material) Destroy(material);
+        captionMaterials.Clear();
     }
 
     void Update()
@@ -103,6 +120,26 @@ public class StoryboardPlayer : MonoBehaviour
         captionText.alignment = frame.align;
         captionText.enableWordWrapping = frame.wordWrap;
         captionText.fontSize = baseCaptionFontSize * Mathf.Max(0.01f, frame.fontScale);
+        captionText.color = frame.overrideCaptionColor ? frame.captionColor : baseCaptionColor;
+
+        if (!frame.enableUnderlay)
+        {
+            captionText.fontSharedMaterial = baseCaptionMaterial;
+            return;
+        }
+
+        if (!captionMaterials.TryGetValue(frame, out var material) || !material)
+        {
+            material = new Material(baseCaptionMaterial) { name = "Storyboard Caption Underlay" };
+            material.EnableKeyword("UNDERLAY_ON");
+            captionMaterials[frame] = material;
+        }
+        material.SetColor("_UnderlayColor", frame.underlayColor);
+        material.SetFloat("_UnderlayOffsetX", frame.underlayOffset.x);
+        material.SetFloat("_UnderlayOffsetY", frame.underlayOffset.y);
+        material.SetFloat("_UnderlayDilate", frame.underlayDilate);
+        material.SetFloat("_UnderlaySoftness", frame.underlaySoftness);
+        captionText.fontMaterial = material;
     }
     static void SetAlpha(Graphic g, float a) { var c = g.color; c.a = a; g.color = c; }
     static IEnumerator Fade(CanvasGroup g, float a, float b, float d)

@@ -21,8 +21,13 @@ public class StoryboardPlayer : MonoBehaviour
     public System.Action onFinished;
 
     bool skipFrame, skipAll; RawImage front, back;
+    float baseCaptionFontSize;
 
-    void Start() { if (playOnStart) StartCoroutine(Play()); }
+    void Start()
+    {
+        baseCaptionFontSize = captionText.fontSize;
+        if (playOnStart) StartCoroutine(Play());
+    }
 
     void Update()
     {
@@ -49,6 +54,7 @@ public class StoryboardPlayer : MonoBehaviour
             else back.texture = f.image ? f.image.texture : null;
 
             float len = isVideo ? Mathf.Min((float)f.video.length, f.duration > 0 ? Mathf.Max(f.duration, 1f) : 999f) : f.duration;
+            ApplyCaptionLayout(f);
             captionText.text = f.caption;
             // cross-fade in
             for (float t = 0; t < data.crossFade && !skipAll; t += Time.deltaTime)
@@ -85,6 +91,18 @@ public class StoryboardPlayer : MonoBehaviour
         if (texAspect > scr) w *= scr / texAspect; else h *= texAspect / scr;
         float x = 0.5f - w / 2 + pan.x * (1 - w) / 2, y = 0.5f - h / 2 + pan.y * (1 - h) / 2;
         img.uvRect = new Rect(x, y, w, h);
+    }
+    void ApplyCaptionLayout(StoryboardData.Frame frame)
+    {
+        RectTransform rect = captionText.rectTransform;
+        rect.anchorMin = frame.anchorMin;
+        rect.anchorMax = frame.anchorMax;
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        captionText.alignment = frame.align;
+        captionText.enableWordWrapping = frame.wordWrap;
+        captionText.fontSize = baseCaptionFontSize * Mathf.Max(0.01f, frame.fontScale);
     }
     static void SetAlpha(Graphic g, float a) { var c = g.color; c.a = a; g.color = c; }
     static IEnumerator Fade(CanvasGroup g, float a, float b, float d)

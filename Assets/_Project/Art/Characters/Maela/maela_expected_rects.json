@@ -1,0 +1,125 @@
+{
+ "psb": "Maela.psb",
+ "canvasH": 320,
+ "sprites": [
+  {
+   "name": "Lantern",
+   "w": 39,
+   "h": 118,
+   "posX": 109,
+   "posY": 85
+  },
+  {
+   "name": "Hand_R",
+   "w": 18,
+   "h": 11,
+   "posX": 122,
+   "posY": 190
+  },
+  {
+   "name": "Arm_Lower_R",
+   "w": 33,
+   "h": 46,
+   "posX": 100,
+   "posY": 165
+  },
+  {
+   "name": "Arm_Upper_R",
+   "w": 23,
+   "h": 70,
+   "posX": 81,
+   "posY": 167
+  },
+  {
+   "name": "Hair_Front",
+   "w": 51,
+   "h": 76,
+   "posX": 58,
+   "posY": 242
+  },
+  {
+   "name": "Head",
+   "w": 101,
+   "h": 73,
+   "posX": 8,
+   "posY": 246
+  },
+  {
+   "name": "Coat_Body",
+   "w": 138,
+   "h": 91,
+   "posX": 2,
+   "posY": 162
+  },
+  {
+   "name": "Coat_Hem",
+   "w": 116,
+   "h": 50,
+   "posX": 6,
+   "posY": 119
+  },
+  {
+   "name": "Dress",
+   "w": 65,
+   "h": 57,
+   "posX": 33,
+   "posY": 76
+  },
+  {
+   "name": "Boot_R",
+   "w": 50,
+   "h": 46,
+   "posX": 48,
+   "posY": 0
+  },
+  {
+   "name": "Leg_Lower_R",
+   "w": 25,
+   "h": 62,
+   "posX": 49,
+   "posY": 41
+  },
+  {
+   "name": "Leg_Upper_R",
+   "w": 47,
+   "h": 35,
+   "posX": 47,
+   "posY": 70
+  },
+  {
+   "name": "Boot_L",
+   "w": 56,
+   "h": 48,
+   "posX": 22,
+   "posY": 1
+  },
+  {
+   "name": "Leg_Lower_L",
+   "w": 32,
+   "h": 38,
+   "posX": 22,
+   "posY": 41
+  },
+  {
+   "name": "Leg_Upper_L",
+   "w": 26,
+   "h": 41,
+   "posX": 31,
+   "posY": 69
+  },
+  {
+   "name": "Hand_L",
+   "w": 17,
+   "h": 20,
+   "posX": 41,
+   "posY": 124
+  },
+  {
+   "name": "Hair_Back",
+   "w": 51,
+   "h": 73,
+   "posX": 8,
+   "posY": 245
+  }
+ ]
+}

@@ -86,6 +86,7 @@ public static class MaelaAnimBuilder
         AddParam(ctrl, "Grounded", AnimatorControllerParameterType.Bool);
         AddParam(ctrl, "VelY", AnimatorControllerParameterType.Float);
         AddParam(ctrl, "RaiseLantern", AnimatorControllerParameterType.Trigger);
+        AddParam(ctrl, "LanternActive", AnimatorControllerParameterType.Bool);
         var sm = ctrl.layers[0].stateMachine;
         var idle = Find(sm, "Idle");
         var walk = State(sm, "Walk", clips["Maela_Walk"], new Vector3(300, 0));
@@ -114,7 +115,9 @@ public static class MaelaAnimBuilder
         var u1 = T(up, idle, 0.06f); u1.AddCondition(AnimatorConditionMode.If, 0, "Grounded"); u1.AddCondition(AnimatorConditionMode.Less, 0.1f, "Speed");
         var u2 = T(up, walk, 0.06f); u2.AddCondition(AnimatorConditionMode.If, 0, "Grounded"); u2.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed"); u2.AddCondition(AnimatorConditionMode.Less, 2.6f, "Speed");
         var u3 = T(up, run, 0.06f); u3.AddCondition(AnimatorConditionMode.If, 0, "Grounded"); u3.AddCondition(AnimatorConditionMode.Greater, 2.6f, "Speed");
-        var back = T(lan, idle, 0.1f); back.hasExitTime = true; back.exitTime = 0.95f;
+        var back = T(lan, idle, 0.1f);
+        back.name = "Lantern Action Complete";
+        back.AddCondition(AnimatorConditionMode.IfNot, 0, "LanternActive");
         EditorUtility.SetDirty(ctrl);
         AssetDatabase.SaveAssets();
         Debug.Log("Maela animations built: Walk / Run / JumpUp / Fall / Lantern");

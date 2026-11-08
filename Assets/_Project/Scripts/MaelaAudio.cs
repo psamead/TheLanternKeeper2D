@@ -10,10 +10,13 @@ public sealed class MaelaAudio : MonoBehaviour
     [SerializeField] private AudioClip lanternRaiseClip;
 
     private AudioSource source;
+    private AudioSource lanternSource;
     private PlayerController controller;
     private AudioClip previousClip;
     private bool wasGrounded;
     private float airborneSeconds;
+
+    public float LanternRaiseDuration => lanternRaiseClip != null ? lanternRaiseClip.length : 0f;
 
     private void Awake()
     {
@@ -21,6 +24,13 @@ public sealed class MaelaAudio : MonoBehaviour
         source.playOnAwake = false;
         source.loop = false;
         source.spatialBlend = 0f;
+        var sources = GetComponents<AudioSource>();
+        lanternSource = sources.Length > 1 ? sources[1] : gameObject.AddComponent<AudioSource>();
+        lanternSource.playOnAwake = false;
+        lanternSource.loop = false;
+        lanternSource.spatialBlend = 0f;
+        lanternSource.pitch = 1f;
+        lanternSource.outputAudioMixerGroup = source.outputAudioMixerGroup;
         controller = GetComponent<PlayerController>();
         wasGrounded = controller != null && controller.IsGrounded;
     }
@@ -67,7 +77,12 @@ public sealed class MaelaAudio : MonoBehaviour
 
     private void PlayLanternRaise()
     {
-        if (lanternRaiseClip != null) PlayClip(lanternRaiseClip, 0.8f);
+        if (lanternSource == null || lanternRaiseClip == null) return;
+        lanternSource.Stop();
+        lanternSource.clip = lanternRaiseClip;
+        lanternSource.volume = 0.8f;
+        lanternSource.pitch = 1f;
+        lanternSource.Play();
     }
 
     private void PlayRandom(AudioClip[] clips, float volume)

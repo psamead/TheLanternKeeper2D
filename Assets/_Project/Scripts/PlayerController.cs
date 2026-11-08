@@ -17,56 +17,92 @@ public class PlayerController : MonoBehaviour
     [Header("Refs")] public Animator animator;   // on the Maela visual child
     public Transform visual;                     // child flipped by scale.x
 
-    Rigidbody2D rb; float lastGrounded = -1, lastJumpPress = -1; bool grounded;
+    Rigidbody2D rb;
+    MaelaAudio maelaAudio;
+    float lastGrounded = -1, lastJumpPress = -1, lanternActionEndsAt;
+    bool grounded, lanternActionActive, lockAllDuringLantern;
 
     public event System.Action OnJump;
     public event System.Action OnLanternRaised;
     public bool IsGrounded => grounded;
     public bool IsWalking { get; private set; }
+    public bool LanternLocked => lanternActionActive && lockAllDuringLantern;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        maelaAudio = GetComponent<MaelaAudio>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visual && animator) visual = animator.transform;
     }
 
     void Update()
     {
-        var k = Keyboard.current; if (k == null) return;
+        if (lanternActionActive && Time.time >= lanternActionEndsAt)
+            CompleteLanternAction();
+
+        var k = Keyboard.current;
+        if (!lanternActionActive && k != null && k.eKey.wasPressedThisFrame)
+            RaiseLantern(true);
+
         float x = 0;
-        if (k.aKey.isPressed || k.leftArrowKey.isPressed) x -= 1;
-        if (k.dKey.isPressed || k.rightArrowKey.isPressed) x += 1;
-        if (k.spaceKey.wasPressedThisFrame || k.wKey.wasPressedThisFrame || k.upArrowKey.wasPressedThisFrame) lastJumpPress = Time.time;
-        if (k.eKey.wasPressedThisFrame && animator)
+        if (!LanternLocked && k != null)
         {
-            animator.SetTrigger("RaiseLantern");
-            OnLanternRaised?.Invoke();
+            if (k.aKey.isPressed || k.leftArrowKey.isPressed) x -= 1;
+            if (k.dKey.isPressed || k.rightArrowKey.isPressed) x += 1;
+            if (k.spaceKey.wasPressedThisFrame || k.wKey.wasPressedThisFrame || k.upArrowKey.wasPressedThisFrame)
+                lastJumpPress = Time.time;
         }
 
-        bool slowWalk = k.leftShiftKey.isPressed || k.rightShiftKey.isPressed;
-        IsWalking = slowWalk && x != 0;
+        bool slowWalk = !LanternLocked && k != null && (k.leftShiftKey.isPressed || k.rightShiftKey.isPressed);
+        IsWalking = !LanternLocked && slowWalk && x != 0;
         float horizontalSpeed = slowWalk ? walkSpeed : runSpeed;
         rb.linearVelocity = new Vector2(x * horizontalSpeed, rb.linearVelocity.y);
         if (x != 0 && visual) { var s = visual.localScale; s.x = Mathf.Abs(s.x) * Mathf.Sign(x); visual.localScale = s; }
 
-        if (Time.time - lastJumpPress < jumpBuffer && Time.time - lastGrounded < coyoteTime)
+        if (!LanternLocked && Time.time - lastJumpPress < jumpBuffer && Time.time - lastGrounded < coyoteTime)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
             lastJumpPress = -1; lastGrounded = -1;
             OnJump?.Invoke();
         }
         // shorter hop when jump released early
-        if (rb.linearVelocity.y > 0 && !(k.spaceKey.isPressed || k.wKey.isPressed || k.upArrowKey.isPressed))
+        if (!LanternLocked && k != null && rb.linearVelocity.y > 0 && !(k.spaceKey.isPressed || k.wKey.isPressed || k.upArrowKey.isPressed))
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * rb.gravityScale * Time.deltaTime;
 
         if (animator)
         {
-            animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+            animator.SetFloat("Speed", LanternLocked ? 0f : Mathf.Abs(rb.linearVelocity.x));
             animator.SetFloat("VelY", rb.linearVelocity.y);
             animator.SetBool("Grounded", grounded);
+        }
+    }
+
+    public bool RaiseLantern(bool lockAll)
+    {
+        if (!grounded || lanternActionActive || !animator)
+            return false;
+
+        lanternActionActive = true;
+        lockAllDuringLantern = lockAll;
+        lanternActionEndsAt = Time.time + (maelaAudio != null ? maelaAudio.LanternRaiseDuration : 0f);
+        animator.ResetTrigger("RaiseLantern");
+        animator.SetBool("LanternActive", true);
+        animator.SetTrigger("RaiseLantern");
+        OnLanternRaised?.Invoke();
+        return true;
+    }
+
+    private void CompleteLanternAction()
+    {
+        lanternActionActive = false;
+        lockAllDuringLantern = false;
+        if (animator)
+        {
+            animator.ResetTrigger("RaiseLantern");
+            animator.SetBool("LanternActive", false);
         }
     }
 

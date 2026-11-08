@@ -87,3 +87,9 @@ Audio follow-up on 2026-11-03: serialized the two Play On Awake music-source vol
 - `Check Maela Sprite Rects` passed for all 17 layers and the prefab has zero missing sprite references. Ran `Realign Maela Sprites` once; `Leg_Upper_L_Sprite` moved +3.5 px / 200 PPU = +0.0175 local X. Other sprite transforms were unchanged.
 - Updated prefab renderer sorting only: Leg_Lower_L 6, Boot_R 7, Boot_L 8, Leg_Upper_R 9, Leg_Lower_R 10. `MaelaAnimBuilder.cs` does not set sorting order. Reviewed magenta captures for Rest, Run, JumpUp, Fall and Lantern; no visible boot/leg gaps, overlaps or seams appeared. In Play Mode, all five Animator states were reached directly, all 17 sprites remained valid, and the specified orders read back correctly. Exited without saving runtime state.
 - Screenshots: `ForDesignScreenshot/2026-11-08_Maela_v1.6m/RestPose_Magenta.png`, `Run.png`, `JumpUp.png`, `Fall.png`, and `Lantern.png` (600×600 each). The camera, renderer enabled states, Animator, PlayerController and CinemachineBrain were restored after capture.
+
+## 2026-11-08 — Maela Footstep v4
+
+- Imported `SFX_Maela_Step_Wood_01_v4.ogg` through `04_v4.ogg` from the shared TechArtAsset folder. Their Unity importer settings match the existing v1 files except for unique asset GUIDs: Decompress On Load, Vorbis quality 0.7, preserve sample rate, stereo, and the same preload/background/ambisonic flags.
+- Updated only the `MaelaAudio.footstepClips` array in `Core_Persistent` to the four v4 clips in order. A Unity readback confirmed all four references, no nulls, and a clean saved scene. The original v1 files remain in place.
+- Source/imported hashes: 01 `A61F4BAE4B700F9203D5DB8C442A971E5AA29B228FA58DC36D7983B151F6C461`; 02 `1C830B8A2F4DD725969A0BD8284EDD18EA8B5D0EA4A1AD7AD4DC5651BE313D06`; 03 `4318991F44412E2FC6D6B75DF03B6BDD541B83F0B3027BF63805788E2B73EE92`; 04 `0D13A41C4D2AA2ACAE5170AC4042321116F7506E33A3DED3BA298CBA7C688D89`.

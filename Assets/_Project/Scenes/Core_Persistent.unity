@@ -1410,10 +1410,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MaelaAudio
   footstepClips:
-  - {fileID: 8300000, guid: 24bf261a7e50e534ba8b0e2d8d53d969, type: 3}
-  - {fileID: 8300000, guid: 0c57429777128384bb59f465dfeb3eb8, type: 3}
-  - {fileID: 8300000, guid: c6bfaf6bc50029b4289526ce6581bb1a, type: 3}
-  - {fileID: 8300000, guid: 64fb9e6354ff3ae4cba5ffd2a9d54471, type: 3}
+  - {fileID: 8300000, guid: 9d864335759b46a3aa8c04085e9fa53c, type: 3}
+  - {fileID: 8300000, guid: 4a17716488df492e861c8422ecce4d88, type: 3}
+  - {fileID: 8300000, guid: dbebc6778ef14c6fa51264a37d36cab3, type: 3}
+  - {fileID: 8300000, guid: 8abfa502ddd64c0287b7c21b4af6414e, type: 3}
   jumpClips:
   - {fileID: 8300000, guid: 63fd7407efd02fd4bbf2acba7c468608, type: 3}
   - {fileID: 8300000, guid: e9da281c5a2eed74d927c61b55ebd900, type: 3}

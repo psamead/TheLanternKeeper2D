@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb; float lastGrounded = -1, lastJumpPress = -1; bool grounded;
 
+    public event System.Action OnJump;
+    public event System.Action OnLanternRaised;
+    public bool IsGrounded => grounded;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,7 +36,11 @@ public class PlayerController : MonoBehaviour
         if (k.aKey.isPressed || k.leftArrowKey.isPressed) x -= 1;
         if (k.dKey.isPressed || k.rightArrowKey.isPressed) x += 1;
         if (k.spaceKey.wasPressedThisFrame || k.wKey.wasPressedThisFrame || k.upArrowKey.wasPressedThisFrame) lastJumpPress = Time.time;
-        if (k.eKey.wasPressedThisFrame && animator) animator.SetTrigger("RaiseLantern");
+        if (k.eKey.wasPressedThisFrame && animator)
+        {
+            animator.SetTrigger("RaiseLantern");
+            OnLanternRaised?.Invoke();
+        }
 
         rb.linearVelocity = new Vector2(x * moveSpeed, rb.linearVelocity.y);
         if (x != 0 && visual) { var s = visual.localScale; s.x = Mathf.Abs(s.x) * Mathf.Sign(x); visual.localScale = s; }
@@ -41,6 +49,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
             lastJumpPress = -1; lastGrounded = -1;
+            OnJump?.Invoke();
         }
         // shorter hop when jump released early
         if (rb.linearVelocity.y > 0 && !(k.spaceKey.isPressed || k.wKey.isPressed || k.upArrowKey.isPressed))

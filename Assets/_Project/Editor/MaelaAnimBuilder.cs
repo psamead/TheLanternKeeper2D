@@ -119,6 +119,14 @@ public static class MaelaAnimBuilder
         var s = AnimationUtility.GetAnimationClipSettings(clip);
         s.loopTime = loop;
         AnimationUtility.SetAnimationClipSettings(clip, s);
+        if (name == "Maela_Run")
+        {
+            AnimationUtility.SetAnimationEvents(clip, new[]
+            {
+                new AnimationEvent { time = 0f, functionName = "PlayFootstep" },
+                new AnimationEvent { time = 0.25f, functionName = "PlayFootstep" }
+            });
+        }
         EditorUtility.SetDirty(clip);
         return clip;
     }

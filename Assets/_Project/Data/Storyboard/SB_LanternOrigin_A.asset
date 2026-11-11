@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SB_LanternOrigin_A
   m_EditorClassIdentifier: Assembly-CSharp::StoryboardData
   frames:
-  - image: {fileID: 21300000, guid: e95928363dcc6ab4a857fcd809e24f38, type: 3}
+  - image: {fileID: 21300000, guid: 3a6a62674b4b3e64e9d355c3af842f68, type: 3}
     video: {fileID: 0}
     caption: Every night, the keeper carried fire from the great lamp down into this
       lantern.
@@ -34,7 +34,7 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: -0.1, y: 0.03}
-  - image: {fileID: 21300000, guid: 8657645662d8c4d4989342ff67912d45, type: 3}
+  - image: {fileID: 21300000, guid: 29f2927b55885e545922324a7d75be8c, type: 3}
     video: {fileID: 0}
     caption: 'The Lantern Pact: where the light falls, memory belongs to people.'
     duration: 6
@@ -54,7 +54,7 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: 0.1, y: -0.03}
-  - image: {fileID: 21300000, guid: 0fb57adf7457e8545ae7b82e7389cc8a, type: 3}
+  - image: {fileID: 21300000, guid: 467647195dea85a46b9195c388fa5915, type: 3}
     video: {fileID: 0}
     caption: Then the lighthouse went dark, and the fog came ashore.
     duration: 6
@@ -74,7 +74,7 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: -0.1, y: 0.03}
-  - image: {fileID: 21300000, guid: 4d30b2ee4f52e0f458d6ed813b8b0d5c, type: 3}
+  - image: {fileID: 21300000, guid: 51b32ba95121fe646a8f94801d69f92a, type: 3}
     video: {fileID: 0}
     caption: The lantern still remembers. In its light, the past comes back.
     duration: 6

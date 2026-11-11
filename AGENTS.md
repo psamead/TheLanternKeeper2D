@@ -26,9 +26,11 @@
 - 不做：灯油、检查点、敌人、潮汐、多结局、存档。新增内容先对照 DEMO_IMPLEMENTATION_PLAN §2。
 
 ## 工作规则
+- **设计文件一律从局域网共享文件夹读取 / 拷贝（11-12 用户要求）**：`\\haoxi-surfacep\Administrator\Documents\MyFlie\AsArtPortfolioTeaching\Game_York\SharedWorkFolder`。任务里写的 `SharedWorkFolder/...`、`TechArtAsset/...` 都指这里，它永远是最新的（比 GitHub 新）。**不要**从 GitHub 克隆、pull、fetch 或下载 raw 文件来取设计内容——GitHub 设计仓库只是给学生看的发布版，常常落后。共享文件夹连不上时停下来汇报，不要改用 GitHub。（Unity 项目自己的 Git / GitHub 照常用。）
 - **录屏 / 截图 / 导出文件的存放位置（11-11 用户要求，必须遵守）**：一律放 `SharedWorkFolder/ForDesignScreenshot/YYYY-MM-DD_主题/`（中间文件放同目录下 `_work/` 子文件夹）。**不要**存到 Videos、Desktop、Downloads、Temp 或其他任何地方——用户找不到。
   - 写共享文件夹失败时（例如 Unity Recorder 不能直接写 UNC 网络路径），改存 Unity 工程根目录的 `TheLanternKeeper2D/_CodexCaptures/YYYY-MM-DD_主题/`（在 `Assets/` 外面；`_CodexCaptures/` 要写进 Unity 的 `.gitignore`，不进 Git），然后自己复制到上面的共享位置。
   - 汇报时写出文件的完整最终路径；如果有文件留在 `_CodexCaptures/`，也要说明。
+- **做完任务必须关掉多余场景（11-11 用户要求）**：测试时用 additive 打开 / 加载的场景，结束前全部 Unload / Remove，Hierarchy 里只留一个场景（默认 `00_StartMenu`），并确认没有残留的 DontDestroyOnLoad 测试对象。多个场景同时开着会让编辑器和 Play Mode 慢一倍（用户实测，11-11 那次 Codex 留下了很多场景）。汇报里写一句"Editor 已回到只开 00_StartMenu"。
 - 一次只做实施清单里的一项；在 Play Mode 验证后才在 §7 打勾，并 git commit 一次。
 - 文本放 ScriptableObject，不写死在脚本里。
 - 美术资产只从 `SharedWorkFolder/TechArtAsset/` 拷入 `Assets/Art/`，不改源文件；美术源文件（.psd/.psb）不进 Git。

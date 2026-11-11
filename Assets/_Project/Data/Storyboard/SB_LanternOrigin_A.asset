@@ -18,8 +18,8 @@ MonoBehaviour:
     caption: Every night, the keeper carried fire from the great lamp down into this
       lantern.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.1, y: 0.44}
+    anchorMax: {x: 0.34, y: 0.68}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -38,11 +38,11 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: 'The Lantern Pact: where the light falls, memory belongs to people.'
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.54, y: 0.65}
+    anchorMax: {x: 0.78, y: 0.76}
     align: 514
     wordWrap: 1
-    fontScale: 1
+    fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
     enableUnderlay: 1
@@ -58,11 +58,11 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Then the lighthouse went dark, and the fog came ashore.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.45, y: 0.55}
+    anchorMax: {x: 0.64, y: 0.69}
     align: 514
     wordWrap: 1
-    fontScale: 1
+    fontScale: 0.9
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
     enableUnderlay: 1
@@ -78,8 +78,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: The lantern still remembers. In its light, the past comes back.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.2, y: 0.37}
+    anchorMax: {x: 0.39, y: 0.58}
     align: 514
     wordWrap: 1
     fontScale: 1

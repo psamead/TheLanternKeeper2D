@@ -100,11 +100,16 @@ public class StoryboardPlayer : MonoBehaviour
             }
             if (!isVideo) KenBurns(front, f, 1f);
 #if UNITY_EDITOR
-            if (data != null && data.name == "SB_Prologue" && i > 0)
+            if (data != null && (data.name == "SB_Prologue" || data.name == "SB_LanternOrigin_A" || data.name == "SB_Ending_B"))
             {
                 ValidateCaptionBounds(f, i);
-                if (i > 0 && i < 3 && UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
-                    yield return CaptureCaptionLayoutScreenshot(i);
+                if (UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
+                {
+                    if (data.name == "SB_Prologue" && i > 0 && i < 3)
+                        yield return CaptureCaptionLayoutScreenshot(i);
+                    else if (data.name == "SB_LanternOrigin_A" || data.name == "SB_Ending_B")
+                        yield return CaptureStoryboardFrame(i, data.name == "SB_LanternOrigin_A" ? "A" : "B");
+                }
             }
 #endif
             if (isVideo) videoPlayer.Stop();
@@ -198,7 +203,8 @@ public class StoryboardPlayer : MonoBehaviour
                           normalized.y >= frame.anchorMin.y - 0.001f && normalized.y <= frame.anchorMax.y + 0.001f;
             allCornersInside &= inside;
         }
-        string report = $"CAPTION_BOUNDS {(allCornersInside ? "PASS" : "FAIL")} P{frameIndex + 1}: " +
+        string sequence = data != null && data.name == "SB_LanternOrigin_A" ? "A" : data != null && data.name == "SB_Ending_B" ? "B" : "P";
+        string report = $"CAPTION_BOUNDS {(allCornersInside ? "PASS" : "FAIL")} {sequence}{frameIndex + 1}: " +
                   $"box=({frame.anchorMin.x:F3},{frame.anchorMin.y:F3})-({frame.anchorMax.x:F3},{frame.anchorMax.y:F3}) " +
                   $"text=({screenMin.x:F3},{screenMin.y:F3})-({screenMax.x:F3},{screenMax.y:F3}) " +
                   $"font={captionText.fontSize:F1} lines={captionText.textInfo.lineCount}";
@@ -208,8 +214,8 @@ public class StoryboardPlayer : MonoBehaviour
             if (!string.IsNullOrEmpty(captureDirectory))
             {
                 System.IO.Directory.CreateDirectory(captureDirectory);
-                string reportPath = System.IO.Path.Combine(captureDirectory, "CaptionBounds.txt");
-                if (frameIndex == 1)
+                string reportPath = System.IO.Path.Combine(captureDirectory, $"CaptionBounds_{sequence}.txt");
+                if (frameIndex == 0)
                     System.IO.File.WriteAllText(reportPath, string.Empty);
                 System.IO.File.AppendAllText(reportPath, report + System.Environment.NewLine);
             }
@@ -227,6 +233,24 @@ public class StoryboardPlayer : MonoBehaviour
             Destroy(screenshot);
         }
         if (frameIndex == 2)
+            UnityEditor.EditorPrefs.SetBool("PrologueCaptionLayout.CaptureEnabled", false);
+    }
+    System.Collections.IEnumerator CaptureStoryboardFrame(int frameIndex, string sequence)
+    {
+        string captureDirectory = UnityEditor.EditorPrefs.GetString("PrologueCaptionLayout.CaptureDirectory", "");
+        if (string.IsNullOrEmpty(captureDirectory)) yield break;
+        System.IO.Directory.CreateDirectory(captureDirectory);
+        captionGroup.alpha = 0f;
+        yield return new WaitForEndOfFrame();
+        Texture2D clean = ScreenCapture.CaptureScreenshotAsTexture();
+        System.IO.File.WriteAllBytes(System.IO.Path.Combine(captureDirectory, $"{sequence}{frameIndex + 1}_clean.png"), clean.EncodeToPNG());
+        Destroy(clean);
+        captionGroup.alpha = 1f;
+        yield return new WaitForEndOfFrame();
+        Texture2D captioned = ScreenCapture.CaptureScreenshotAsTexture();
+        System.IO.File.WriteAllBytes(System.IO.Path.Combine(captureDirectory, $"{sequence}{frameIndex + 1}_end.png"), captioned.EncodeToPNG());
+        Destroy(captioned);
+        if (sequence == "B" && frameIndex == 4)
             UnityEditor.EditorPrefs.SetBool("PrologueCaptionLayout.CaptureEnabled", false);
     }
 #endif

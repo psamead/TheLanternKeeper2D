@@ -17,8 +17,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: What you forget doesn't vanish. It sinks.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.06, y: 0.62}
+    anchorMax: {x: 0.3, y: 0.85}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -37,8 +37,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Twenty years ago, on Anaon night, two fishermen sailed when no one should.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.06, y: 0.39}
+    anchorMax: {x: 0.26, y: 0.61}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -58,11 +58,11 @@ MonoBehaviour:
     caption: One jumped back to shore. The other followed a light that never brought
       him home.
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.4, y: 0.46}
+    anchorMax: {x: 0.65, y: 0.6}
     align: 514
     wordWrap: 1
-    fontScale: 1
+    fontScale: 0.9
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
     enableUnderlay: 1
@@ -79,8 +79,8 @@ MonoBehaviour:
     caption: "Last year, the keeper put out the lamp \u2014 and the sea took him
       too."
     duration: 6
-    anchorMin: {x: 0.51, y: 0.36}
-    anchorMax: {x: 0.82, y: 0.71}
+    anchorMin: {x: 0.73, y: 0.15}
+    anchorMax: {x: 0.93, y: 0.35}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -99,8 +99,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: "Six days until Anaon night. To be continued\u2026"
     duration: 8
-    anchorMin: {x: 0.3, y: 0.7}
-    anchorMax: {x: 0.7, y: 0.88}
+    anchorMin: {x: 0.36, y: 0.75}
+    anchorMax: {x: 0.63, y: 0.88}
     align: 514
     wordWrap: 1
     fontScale: 1

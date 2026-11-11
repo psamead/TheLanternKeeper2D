@@ -26,7 +26,9 @@
 - 不做：灯油、检查点、敌人、潮汐、多结局、存档。新增内容先对照 DEMO_IMPLEMENTATION_PLAN §2。
 
 ## 工作规则
-- 录屏 / 截图的中间文件放 `SharedWorkFolder/ForDesignScreenshot/_codex_capture/`（本地，不进 git），**不要**在 `UnityProject/` 下新建文件夹；正式交付的放 `ForDesignScreenshot/YYYY-MM-DD_主题/`。
+- **录屏 / 截图 / 导出文件的存放位置（11-11 用户要求，必须遵守）**：一律放 `SharedWorkFolder/ForDesignScreenshot/YYYY-MM-DD_主题/`（中间文件放同目录下 `_work/` 子文件夹）。**不要**存到 Videos、Desktop、Downloads、Temp 或其他任何地方——用户找不到。
+  - 写共享文件夹失败时（例如 Unity Recorder 不能直接写 UNC 网络路径），改存 Unity 工程根目录的 `TheLanternKeeper2D/_CodexCaptures/YYYY-MM-DD_主题/`（在 `Assets/` 外面；`_CodexCaptures/` 要写进 Unity 的 `.gitignore`，不进 Git），然后自己复制到上面的共享位置。
+  - 汇报时写出文件的完整最终路径；如果有文件留在 `_CodexCaptures/`，也要说明。
 - 一次只做实施清单里的一项；在 Play Mode 验证后才在 §7 打勾，并 git commit 一次。
 - 文本放 ScriptableObject，不写死在脚本里。
 - 美术资产只从 `SharedWorkFolder/TechArtAsset/` 拷入 `Assets/Art/`，不改源文件；美术源文件（.psd/.psb）不进 Git。

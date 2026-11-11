@@ -88,6 +88,15 @@ public class StoryboardPlayer : MonoBehaviour
                 if (!isVideo) KenBurns(front, f, t / len);
                 yield return null;
             }
+            if (!isVideo) KenBurns(front, f, 1f);
+#if UNITY_EDITOR
+            if (data != null && data.name == "SB_Prologue" && i > 0)
+            {
+                ValidateCaptionBounds(f, i);
+                if (i > 0 && UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
+                    yield return CaptureCaptionLayoutScreenshot(i);
+            }
+#endif
             if (isVideo) videoPlayer.Stop();
             captionGroup.alpha = 0;
         }
@@ -141,6 +150,69 @@ public class StoryboardPlayer : MonoBehaviour
         material.SetFloat("_UnderlaySoftness", frame.underlaySoftness);
         captionText.fontMaterial = material;
     }
+#if UNITY_EDITOR
+    void ValidateCaptionBounds(StoryboardData.Frame frame, int frameIndex)
+    {
+        captionText.ForceMeshUpdate();
+        Bounds bounds = captionText.textBounds;
+        Vector3 min = bounds.min;
+        Vector3 max = bounds.max;
+        Vector3[] localCorners =
+        {
+            new Vector3(min.x, min.y, min.z),
+            new Vector3(min.x, max.y, min.z),
+            new Vector3(max.x, min.y, min.z),
+            new Vector3(max.x, max.y, min.z)
+        };
+        RectTransform rect = captionText.rectTransform;
+        Canvas canvas = captionText.canvas;
+        Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+            ? canvas.worldCamera
+            : null;
+        Vector2 screenMin = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 screenMax = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+        bool allCornersInside = bounds.size.x > 0f && bounds.size.y > 0f;
+        for (int cornerIndex = 0; cornerIndex < localCorners.Length; cornerIndex++)
+        {
+            Vector3 world = rect.TransformPoint(localCorners[cornerIndex]);
+            Vector2 screen = RectTransformUtility.WorldToScreenPoint(eventCamera, world);
+            Vector2 normalized = new Vector2(screen.x / Screen.width, screen.y / Screen.height);
+            screenMin = Vector2.Min(screenMin, normalized);
+            screenMax = Vector2.Max(screenMax, normalized);
+            bool inside = normalized.x >= frame.anchorMin.x - 0.001f && normalized.x <= frame.anchorMax.x + 0.001f &&
+                          normalized.y >= frame.anchorMin.y - 0.001f && normalized.y <= frame.anchorMax.y + 0.001f;
+            allCornersInside &= inside;
+        }
+        string report = $"CAPTION_BOUNDS {(allCornersInside ? "PASS" : "FAIL")} P{frameIndex + 1}: " +
+                  $"box=({frame.anchorMin.x:F3},{frame.anchorMin.y:F3})-({frame.anchorMax.x:F3},{frame.anchorMax.y:F3}) " +
+                  $"text=({screenMin.x:F3},{screenMin.y:F3})-({screenMax.x:F3},{screenMax.y:F3}) " +
+                  $"font={captionText.fontSize:F1} lines={captionText.textInfo.lineCount}";
+        Debug.Log(report);
+        if (UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
+        {
+            string captureDirectory = UnityEditor.EditorPrefs.GetString("PrologueCaptionLayout.CaptureDirectory", "");
+            if (!string.IsNullOrEmpty(captureDirectory))
+            {
+                System.IO.Directory.CreateDirectory(captureDirectory);
+                System.IO.File.AppendAllText(System.IO.Path.Combine(captureDirectory, "CaptionBounds.txt"), report + System.Environment.NewLine);
+            }
+        }
+    }
+    System.Collections.IEnumerator CaptureCaptionLayoutScreenshot(int frameIndex)
+    {
+        yield return new WaitForEndOfFrame();
+        string captureDirectory = UnityEditor.EditorPrefs.GetString("PrologueCaptionLayout.CaptureDirectory", "");
+        if (!string.IsNullOrEmpty(captureDirectory))
+        {
+            System.IO.Directory.CreateDirectory(captureDirectory);
+            Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(captureDirectory, $"P{frameIndex + 1}_caption_v2.png"), screenshot.EncodeToPNG());
+            Destroy(screenshot);
+        }
+        if (frameIndex == 3)
+            UnityEditor.EditorPrefs.SetBool("PrologueCaptionLayout.CaptureEnabled", false);
+    }
+#endif
     static void SetAlpha(Graphic g, float a) { var c = g.color; c.a = a; g.color = c; }
     static IEnumerator Fade(CanvasGroup g, float a, float b, float d)
     { for (float t = 0; t < d; t += Time.deltaTime) { g.alpha = Mathf.Lerp(a, b, t / d); yield return null; } g.alpha = b; }

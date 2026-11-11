@@ -39,8 +39,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Each night the sea fog rolls in, and takes a little of what people remember.
     duration: 6
-    anchorMin: {x: 0.25, y: 0.67}
-    anchorMax: {x: 0.75, y: 0.9}
+    anchorMin: {x: 0.54, y: 0.32}
+    anchorMax: {x: 0.72, y: 0.69}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -59,8 +59,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Seven days before the Night of Anaon, Maela comes to stay with her grandmother.
     duration: 6
-    anchorMin: {x: 0.52, y: 0.68}
-    anchorMax: {x: 0.92, y: 0.9}
+    anchorMin: {x: 0.56, y: 0.63}
+    anchorMax: {x: 0.8, y: 0.85}
     align: 514
     wordWrap: 1
     fontScale: 1
@@ -79,8 +79,8 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: The next morning, Grandma looks at her as if she were a stranger.
     duration: 7
-    anchorMin: {x: 0.3, y: 0.68}
-    anchorMax: {x: 0.82, y: 0.9}
+    anchorMin: {x: 0.4, y: 0.64}
+    anchorMax: {x: 0.65, y: 0.86}
     align: 514
     wordWrap: 1
     fontScale: 1

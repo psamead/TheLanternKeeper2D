@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
     public bool RaiseLantern(bool lockAll)
     {
-        if (!grounded || lanternActionActive || !animator)
+        if (GameState.Instance == null || !GameState.Instance.HasLantern || !grounded || lanternActionActive || !animator)
             return false;
 
         lanternActionActive = true;

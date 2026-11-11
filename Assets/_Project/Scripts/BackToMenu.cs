@@ -1,14 +1,22 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public sealed class BackToMenu : MonoBehaviour
 {
     private void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (StoryboardPlayer.AnyPlaybackActive || Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
+            return;
+
+        if (SceneManager.GetActiveScene().name == "03_EndCard")
+            return;
+
+        GameState.ResetForMenu();
+        if (LevelLoader.Instance != null)
         {
-            if (LevelLoader.Instance != null) LevelLoader.Instance.ReturnToMenu();
-            else SceneLoader.Load("00_StartMenu");
+            LevelLoader.Instance.ReturnToMenu();
         }
+        else SceneLoader.Load("00_StartMenu");
     }
 }

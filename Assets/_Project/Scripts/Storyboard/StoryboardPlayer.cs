@@ -19,7 +19,12 @@ public class StoryboardPlayer : MonoBehaviour
     public VideoPlayer videoPlayer;              // Render Mode = Render Texture
     public RenderTexture videoTexture;           // 1920x1080
     public bool playOnStart = true;
+    public bool fadeBackAtEnd;
     public System.Action onFinished;
+
+    public static bool AnyPlaybackActive { get; private set; }
+    public bool IsPlaying { get; private set; }
+    public bool WasSkipped { get; private set; }
 
     bool skipFrame, skipAll; RawImage front, back;
     float baseCaptionFontSize;
@@ -55,6 +60,11 @@ public class StoryboardPlayer : MonoBehaviour
 
     public IEnumerator Play()
     {
+        skipAll = false;
+        skipFrame = false;
+        WasSkipped = false;
+        IsPlaying = true;
+        AnyPlaybackActive = true;
         front = layerA; back = layerB;
         SetAlpha(front, 0); SetAlpha(back, 0); captionGroup.alpha = 0;
         yield return Fade(blackFade, 1, 0, 0.6f);
@@ -101,6 +111,11 @@ public class StoryboardPlayer : MonoBehaviour
             captionGroup.alpha = 0;
         }
         yield return Fade(blackFade, blackFade.alpha, 1, 0.8f);
+        if (fadeBackAtEnd)
+            yield return Fade(blackFade, 1, 0, 0.6f);
+        IsPlaying = false;
+        AnyPlaybackActive = false;
+        WasSkipped = skipAll;
         onFinished?.Invoke();
         if (!string.IsNullOrEmpty(data.nextScene)) SceneLoader.Load(data.nextScene);
     }
@@ -187,7 +202,6 @@ public class StoryboardPlayer : MonoBehaviour
                   $"box=({frame.anchorMin.x:F3},{frame.anchorMin.y:F3})-({frame.anchorMax.x:F3},{frame.anchorMax.y:F3}) " +
                   $"text=({screenMin.x:F3},{screenMin.y:F3})-({screenMax.x:F3},{screenMax.y:F3}) " +
                   $"font={captionText.fontSize:F1} lines={captionText.textInfo.lineCount}";
-        Debug.Log(report);
         if (UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
         {
             string captureDirectory = UnityEditor.EditorPrefs.GetString("PrologueCaptionLayout.CaptureDirectory", "");

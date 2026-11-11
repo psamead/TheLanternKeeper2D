@@ -8,7 +8,10 @@ public sealed class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource[] musicSources = new AudioSource[2];
     [SerializeField] private AudioSource[] ambienceSources = new AudioSource[2];
     private Coroutine musicFade, ambienceFade;
+    private Coroutine ambienceDuckFade;
     private int musicVoice, ambienceVoice;
+    private readonly float[] ambienceTargets = new float[2];
+    private float ambienceMultiplier = 1f;
 
     // Only playback data crosses the single-scene Prologue -> Core boundary.
     // Neither PrologueAudio nor its AudioSources survive the scene unload.
@@ -79,7 +82,30 @@ public sealed class AudioManager : MonoBehaviour
     {
         if (ambienceFade != null) StopCoroutine(ambienceFade);
         if (clip != null && ambienceSources[ambienceVoice].clip != clip) ambienceVoice = 1 - ambienceVoice;
-        ambienceFade = StartCoroutine(Crossfade(ambienceSources, ambienceVoice, clip, vol, fade));
+        ambienceTargets[1 - ambienceVoice] = 0f;
+        ambienceTargets[ambienceVoice] = clip == null ? 0f : Mathf.Clamp01(vol);
+        ambienceFade = StartCoroutine(Crossfade(ambienceSources, ambienceVoice, clip, vol * ambienceMultiplier, fade));
+    }
+
+    public void SetAmbienceDucked(bool ducked)
+    {
+        if (ambienceDuckFade != null) StopCoroutine(ambienceDuckFade);
+        ambienceDuckFade = StartCoroutine(TweenAmbienceMultiplier(ducked ? 0.5f : 1f, 0.25f));
+    }
+
+    private IEnumerator TweenAmbienceMultiplier(float target, float seconds)
+    {
+        float start = ambienceMultiplier;
+        for (float elapsed = 0f; elapsed < seconds; elapsed += Time.unscaledDeltaTime)
+        {
+            ambienceMultiplier = Mathf.Lerp(start, target, elapsed / seconds);
+            for (int i = 0; i < ambienceSources.Length; i++)
+                ambienceSources[i].volume = ambienceTargets[i] * ambienceMultiplier;
+            yield return null;
+        }
+        ambienceMultiplier = target;
+        for (int i = 0; i < ambienceSources.Length; i++)
+            ambienceSources[i].volume = ambienceTargets[i] * ambienceMultiplier;
     }
 
     private static IEnumerator Crossfade(AudioSource[] sources, int voice, AudioClip clip, float volume, float seconds)

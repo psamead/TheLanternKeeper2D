@@ -4,8 +4,19 @@ using UnityEngine;
 public sealed class GameState : MonoBehaviour
 {
     public static GameState Instance { get; private set; }
-    public bool HasLantern { get; set; }
-    public bool MemoryLayer { get; set; }
+    private static bool hasLantern;
+    private static bool memoryLayer;
+    public bool HasLantern { get => hasLantern; set => hasLantern = value; }
+    public bool MemoryLayer { get => memoryLayer; set => memoryLayer = value; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetSessionState() { hasLantern = false; memoryLayer = false; Instance = null; }
+
+    public static void ResetForMenu()
+    {
+        hasLantern = false;
+        memoryLayer = false;
+    }
 
     private void Awake()
     {

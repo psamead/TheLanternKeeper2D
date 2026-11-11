@@ -93,7 +93,7 @@ public class StoryboardPlayer : MonoBehaviour
             if (data != null && data.name == "SB_Prologue" && i > 0)
             {
                 ValidateCaptionBounds(f, i);
-                if (i > 0 && UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
+                if (i > 0 && i < 3 && UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
                     yield return CaptureCaptionLayoutScreenshot(i);
             }
 #endif
@@ -194,7 +194,10 @@ public class StoryboardPlayer : MonoBehaviour
             if (!string.IsNullOrEmpty(captureDirectory))
             {
                 System.IO.Directory.CreateDirectory(captureDirectory);
-                System.IO.File.AppendAllText(System.IO.Path.Combine(captureDirectory, "CaptionBounds.txt"), report + System.Environment.NewLine);
+                string reportPath = System.IO.Path.Combine(captureDirectory, "CaptionBounds.txt");
+                if (frameIndex == 1)
+                    System.IO.File.WriteAllText(reportPath, string.Empty);
+                System.IO.File.AppendAllText(reportPath, report + System.Environment.NewLine);
             }
         }
     }
@@ -206,10 +209,10 @@ public class StoryboardPlayer : MonoBehaviour
         {
             System.IO.Directory.CreateDirectory(captureDirectory);
             Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
-            System.IO.File.WriteAllBytes(System.IO.Path.Combine(captureDirectory, $"P{frameIndex + 1}_caption_v2.png"), screenshot.EncodeToPNG());
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(captureDirectory, $"P{frameIndex + 1}_caption_v3.png"), screenshot.EncodeToPNG());
             Destroy(screenshot);
         }
-        if (frameIndex == 3)
+        if (frameIndex == 2)
             UnityEditor.EditorPrefs.SetBool("PrologueCaptionLayout.CaptureEnabled", false);
     }
 #endif

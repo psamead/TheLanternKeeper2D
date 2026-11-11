@@ -39,11 +39,11 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Each night the sea fog rolls in, and takes a little of what people remember.
     duration: 6
-    anchorMin: {x: 0.54, y: 0.32}
-    anchorMax: {x: 0.72, y: 0.69}
+    anchorMin: {x: 0.54, y: 0.48}
+    anchorMax: {x: 0.71, y: 0.67}
     align: 514
     wordWrap: 1
-    fontScale: 1
+    fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
     enableUnderlay: 1
@@ -59,11 +59,11 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: Seven days before the Night of Anaon, Maela comes to stay with her grandmother.
     duration: 6
-    anchorMin: {x: 0.56, y: 0.63}
-    anchorMax: {x: 0.8, y: 0.85}
+    anchorMin: {x: 0.5, y: 0.64}
+    anchorMax: {x: 0.72, y: 0.8}
     align: 514
     wordWrap: 1
-    fontScale: 1
+    fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
     enableUnderlay: 1

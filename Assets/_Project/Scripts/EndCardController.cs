@@ -8,9 +8,11 @@ public sealed class EndCardController : MonoBehaviour
     [SerializeField] private GameObject buttonsRoot;
     [SerializeField] private TMP_Text backLabel;
     [SerializeField] private TMP_Text quitLabel;
+    [SerializeField] private TMP_Text advanceHint;
     [SerializeField] private LanternFlowText flowText;
     [SerializeField] private AudioSource storyboardMusic;
     [SerializeField, Min(0f)] private float musicFadeSeconds = 1.5f;
+    private Coroutine musicFade;
 
     private void Start()
     {
@@ -19,9 +21,12 @@ public sealed class EndCardController : MonoBehaviour
         if (buttonsRoot) buttonsRoot.SetActive(false);
         if (storyboardMusic && storyboardMusic.clip)
         {
-            storyboardMusic.volume = 0f;
-            storyboardMusic.Play();
-            StartCoroutine(FadeMusic(0.6f));
+            if (!AudioManager.TryRestoreEndCardMusic(storyboardMusic))
+            {
+                storyboardMusic.volume = 0f;
+                storyboardMusic.Play();
+            }
+            StartMusicFade(0.6f);
         }
         if (storyboard)
         {
@@ -34,13 +39,21 @@ public sealed class EndCardController : MonoBehaviour
 
     private void ShowButtons()
     {
-        if (storyboardMusic) StartCoroutine(FadeMusic(0f));
-        if (storyboard && !storyboard.WasSkipped)
+        if (storyboardMusic) StartMusicFade(0f);
+        if (storyboard)
         {
+            if (storyboard.WasSkipped) storyboard.ShowFinalFrame();
             storyboard.blackFade.alpha = 0f;
-            storyboard.captionGroup.alpha = 1f;
+            if (!storyboard.WasSkipped) storyboard.captionGroup.alpha = 1f;
         }
         if (buttonsRoot) buttonsRoot.SetActive(true);
+        if (advanceHint) advanceHint.gameObject.SetActive(false);
+    }
+
+    private void StartMusicFade(float target)
+    {
+        if (musicFade != null) StopCoroutine(musicFade);
+        musicFade = StartCoroutine(FadeMusic(target));
     }
 
     private System.Collections.IEnumerator FadeMusic(float target)
@@ -55,6 +68,7 @@ public sealed class EndCardController : MonoBehaviour
         }
         storyboardMusic.volume = target;
         if (target <= 0f) storyboardMusic.Stop();
+        musicFade = null;
     }
 
     public void BackToMenu()

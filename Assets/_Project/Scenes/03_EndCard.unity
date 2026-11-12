@@ -500,7 +500,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -24, y: -12}
+  m_SizeDelta: {x: -18, y: -9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &608708541
 CanvasRenderer:
@@ -557,8 +557,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -635,6 +635,7 @@ MonoBehaviour:
   buttonsRoot: {fileID: 1348295494}
   backLabel: {fileID: 608708542}
   quitLabel: {fileID: 1438910891}
+  advanceHint: {fileID: 875151982}
   flowText: {fileID: 11400000, guid: 6827d58c431f27e47a97e2dbd9b4afd9, type: 2}
   storyboardMusic: {fileID: 2065033583}
   musicFadeSeconds: 1.5
@@ -689,8 +690,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -36}
-  m_SizeDelta: {x: 420, y: 68}
+  m_AnchoredPosition: {x: 0, y: -27}
+  m_SizeDelta: {x: 315, y: 51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &699091740
 MonoBehaviour:
@@ -1051,8 +1052,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 22}
-  m_SizeDelta: {x: 420, y: 68}
+  m_AnchoredPosition: {x: 0, y: 18}
+  m_SizeDelta: {x: 315, y: 51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &778220084
 MonoBehaviour:
@@ -1636,7 +1637,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 162}
-  m_SizeDelta: {x: 520, y: 150}
+  m_SizeDelta: {x: 390, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1348295496
 MonoBehaviour:
@@ -1741,8 +1742,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1811,7 +1812,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -24, y: -12}
+  m_SizeDelta: {x: -18, y: -9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1735240097
 GameObject:

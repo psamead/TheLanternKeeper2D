@@ -7,11 +7,13 @@ public sealed class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
     [SerializeField] private AudioSource[] musicSources = new AudioSource[2];
     [SerializeField] private AudioSource[] ambienceSources = new AudioSource[2];
-    private Coroutine musicFade, ambienceFade;
+    private Coroutine musicFade, ambienceFade, musicDuckFade, bellDuck;
     private Coroutine ambienceDuckFade;
     private int musicVoice, ambienceVoice;
     private readonly float[] ambienceTargets = new float[2];
+    private readonly float[] musicBaseVolumes = new float[2];
     private float ambienceMultiplier = 1f;
+    private float musicMultiplier = 1f;
 
     // Only playback data crosses the single-scene Prologue -> Core boundary.
     // Neither PrologueAudio nor its AudioSources survive the scene unload.
@@ -33,11 +35,13 @@ public sealed class AudioManager : MonoBehaviour
         }
     }
     private static Playback pendingMusic, pendingAmbience;
+    private static Playback pendingEndCardMusic;
+    private static bool hasEndCardHandoff;
     private static bool hasHandoff;
     private static bool restoredPrologueMusic;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetHandoff() { hasHandoff = false; restoredPrologueMusic = false; pendingMusic = pendingAmbience = default; }
+    private static void ResetHandoff() { hasHandoff = false; hasEndCardHandoff = false; restoredPrologueMusic = false; pendingMusic = pendingAmbience = pendingEndCardMusic = default; }
 
     public static void CapturePrologue(AudioSource music, AudioSource ambience)
     {
@@ -56,6 +60,7 @@ public sealed class AudioManager : MonoBehaviour
         {
             pendingMusic.Restore(musicSources[0]);
             pendingAmbience.Restore(ambienceSources[0]);
+            musicBaseVolumes[0] = musicSources[0].volume;
             restoredPrologueMusic = pendingMusic.playing;
             hasHandoff = false;
             pendingMusic = pendingAmbience = default;
@@ -84,7 +89,90 @@ public sealed class AudioManager : MonoBehaviour
     {
         if (musicFade != null) StopCoroutine(musicFade);
         if (clip != null && musicSources[musicVoice].clip != clip) musicVoice = 1 - musicVoice;
-        musicFade = StartCoroutine(Crossfade(musicSources, musicVoice, clip, vol, fade));
+        musicFade = StartCoroutine(CrossfadeMusic(musicVoice, clip, vol, fade));
+    }
+
+    public void SetMusicDucked(bool ducked)
+    {
+        if (musicDuckFade != null) StopCoroutine(musicDuckFade);
+        musicDuckFade = StartCoroutine(TweenMusicMultiplier(ducked ? 0.48f : 1f, 0.25f));
+    }
+
+    public void DuckMusicForBell(float bellSeconds)
+    {
+        if (bellDuck != null) StopCoroutine(bellDuck);
+        bellDuck = StartCoroutine(BellDuck(bellSeconds));
+    }
+
+    private IEnumerator BellDuck(float bellSeconds)
+    {
+        SetMusicDucked(true);
+        yield return new WaitForSecondsRealtime(Mathf.Min(1.25f, Mathf.Max(0.35f, bellSeconds * 0.4f)));
+        SetMusicDucked(false);
+        bellDuck = null;
+    }
+
+    private IEnumerator TweenMusicMultiplier(float target, float seconds)
+    {
+        float start = musicMultiplier;
+        for (float elapsed = 0f; elapsed < seconds; elapsed += Time.unscaledDeltaTime)
+        {
+            musicMultiplier = Mathf.Lerp(start, target, elapsed / seconds);
+            ApplyMusicVolumes();
+            yield return null;
+        }
+        musicMultiplier = target;
+        ApplyMusicVolumes();
+        musicDuckFade = null;
+    }
+
+    private void ApplyMusicVolumes()
+    {
+        for (int i = 0; i < musicSources.Length; i++)
+            musicSources[i].volume = musicBaseVolumes[i] * musicMultiplier;
+    }
+
+    private IEnumerator CrossfadeMusic(int voice, AudioClip clip, float volume, float seconds)
+    {
+        AudioSource incoming = musicSources[voice], outgoing = musicSources[1 - voice];
+        if (clip != null && incoming.clip != clip)
+        {
+            incoming.Stop();
+            incoming.clip = clip;
+            musicBaseVolumes[voice] = 0f;
+        }
+        if (clip != null && !incoming.isPlaying) incoming.Play();
+        float fromIn = musicBaseVolumes[voice], fromOut = musicBaseVolumes[1 - voice];
+        float target = clip == null ? 0f : Mathf.Clamp01(volume);
+        for (float elapsed = 0f; elapsed < seconds; elapsed += Time.unscaledDeltaTime)
+        {
+            float t = seconds <= 0f ? 1f : Mathf.Clamp01(elapsed / seconds);
+            musicBaseVolumes[voice] = Mathf.Lerp(fromIn, target, t);
+            musicBaseVolumes[1 - voice] = Mathf.Lerp(fromOut, 0f, t);
+            ApplyMusicVolumes();
+            yield return null;
+        }
+        musicBaseVolumes[voice] = target;
+        musicBaseVolumes[1 - voice] = 0f;
+        ApplyMusicVolumes();
+        outgoing.Stop();
+        if (clip == null) incoming.Stop();
+        musicFade = null;
+    }
+
+    public void CaptureForEndCard()
+    {
+        pendingEndCardMusic = Playback.Capture(musicSources[musicVoice]);
+        hasEndCardHandoff = pendingEndCardMusic.playing;
+    }
+
+    public static bool TryRestoreEndCardMusic(AudioSource target)
+    {
+        if (!hasEndCardHandoff || !target) return false;
+        pendingEndCardMusic.Restore(target);
+        pendingEndCardMusic = default;
+        hasEndCardHandoff = false;
+        return true;
     }
 
     public void PlayAmbience(AudioClip clip, float vol, float fade)

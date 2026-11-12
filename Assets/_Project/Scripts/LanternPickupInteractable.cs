@@ -1,10 +1,8 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public sealed class LanternPickupInteractable : MonoBehaviour
 {
-    [SerializeField] private TMP_Text prompt;
     [SerializeField] private LanternFlowText flowText;
     [SerializeField] private StoryboardPlayer storyboardA;
     [SerializeField] private LanternVisualState maelaLantern;
@@ -12,59 +10,60 @@ public sealed class LanternPickupInteractable : MonoBehaviour
     private PlayerController nearbyPlayer;
     private PlayerController pickedPlayer;
     private bool pickedUp;
-    private float promptAlpha;
-    private float promptTargetAlpha;
+    private LanternProgressHint sharedHint;
 
     private void Awake()
     {
         if (!storyboardA) storyboardA = FindFirstObjectByType<StoryboardPlayer>();
         if (!maelaLantern) maelaLantern = FindFirstObjectByType<LanternVisualState>();
-        SetPrompt(false);
+        sharedHint = FindFirstObjectByType<LanternProgressHint>();
     }
 
     private void Update()
     {
-        if (prompt)
-        {
-            promptAlpha = Mathf.MoveTowards(promptAlpha, promptTargetAlpha, Time.deltaTime / 0.25f);
-            Color color = prompt.color;
-            color.a = promptAlpha;
-            prompt.color = color;
-            if (promptAlpha <= 0f && promptTargetAlpha <= 0f) prompt.gameObject.SetActive(false);
-        }
-        if (!pickedUp && nearbyPlayer != null && Keyboard.current != null && Keyboard.current.wKey.wasPressedThisFrame)
+        if (!pickedUp && nearbyPlayer != null && !StoryboardPlayer.AnyPlaybackActive &&
+            Keyboard.current != null && Keyboard.current.tKey.wasPressedThisFrame)
             PickUp();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         var player = other.GetComponentInParent<PlayerController>();
-        if (player == null || pickedUp) return;
+        if (player == null || pickedUp || StoryboardPlayer.AnyPlaybackActive) return;
         nearbyPlayer = player;
-        if (prompt && flowText) prompt.text = flowText.pickupPrompt;
-        SetPrompt(true);
+        if (!sharedHint) sharedHint = FindFirstObjectByType<LanternProgressHint>();
+        if (sharedHint && flowText) sharedHint.ShowFor(this, flowText.pickupPrompt, float.PositiveInfinity, 10);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (nearbyPlayer == null || other.GetComponentInParent<PlayerController>() != nearbyPlayer) return;
         nearbyPlayer = null;
-        SetPrompt(false);
+        if (sharedHint) sharedHint.HideFor(this);
     }
 
     private void PickUp()
     {
-        if (GameState.Instance == null || storyboardA == null) return;
+        if (GameState.Instance == null || storyboardA == null || StoryboardPlayer.AnyPlaybackActive) return;
         pickedPlayer = nearbyPlayer;
         if (pickedPlayer == null) return;
         pickedUp = true;
         GameState.Instance.HasLantern = true;
         if (maelaLantern) maelaLantern.SetVisible(true);
-        SetPrompt(false);
+        nearbyPlayer = null;
+        if (sharedHint) sharedHint.Hide();
+        var trigger = GetComponent<Collider2D>();
+        if (trigger) trigger.enabled = false;
+        var body = pickedPlayer.GetComponent<Rigidbody2D>();
+        if (body) { body.linearVelocity = Vector2.zero; body.simulated = false; }
         pickedPlayer.enabled = false;
         gameObject.SetActive(false);
 
-        if (AudioManager.Instance) AudioManager.Instance.SetAmbienceDucked(true);
+        if (AudioManager.Instance)
+        {
+            AudioManager.Instance.SetAmbienceDucked(true);
+            AudioManager.Instance.SetMusicDucked(true);
+        }
         storyboardA.layerA.transform.root.gameObject.SetActive(true);
         storyboardA.onFinished = FinishStoryboard;
         storyboardA.StartCoroutine(storyboardA.Play());
@@ -72,18 +71,22 @@ public sealed class LanternPickupInteractable : MonoBehaviour
 
     private void FinishStoryboard()
     {
-        if (AudioManager.Instance) AudioManager.Instance.SetAmbienceDucked(false);
-        if (pickedPlayer) pickedPlayer.enabled = true;
+        if (AudioManager.Instance)
+        {
+            AudioManager.Instance.SetAmbienceDucked(false);
+            AudioManager.Instance.SetMusicDucked(false);
+        }
+        if (pickedPlayer)
+        {
+            var body = pickedPlayer.GetComponent<Rigidbody2D>();
+            if (body) body.simulated = true;
+            pickedPlayer.enabled = true;
+        }
         if (storyboardA && storyboardA.layerA)
             storyboardA.layerA.transform.root.gameObject.SetActive(false);
-        var hint = FindFirstObjectByType<LanternProgressHint>();
+        var hint = sharedHint ? sharedHint : FindFirstObjectByType<LanternProgressHint>();
         if (hint) hint.Show();
     }
 
-    private void SetPrompt(bool visible)
-    {
-        if (!prompt) return;
-        promptTargetAlpha = visible ? 1f : 0f;
-        if (visible) prompt.gameObject.SetActive(true);
-    }
+    private void OnDisable() { if (sharedHint) sharedHint.HideFor(this); }
 }

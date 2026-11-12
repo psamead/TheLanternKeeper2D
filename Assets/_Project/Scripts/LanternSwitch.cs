@@ -37,7 +37,10 @@ public sealed class LanternSwitch : MonoBehaviour
     /// <summary>Shared entry point for E and deterministic in-Editor interaction checks.</summary>
     public bool RequestSwitch()
     {
-        if (bellPlaying || GameState.Instance == null || !GameState.Instance.HasLantern) return false;
+        if (bellPlaying || StoryboardPlayer.AnyPlaybackActive || (player && player.ControlsLocked) ||
+            GameState.Instance == null || !GameState.Instance.HasLantern) return false;
+        var hint = FindFirstObjectByType<LanternProgressHint>();
+        if (hint) hint.Hide();
         StartCoroutine(SwitchWorld());
         return true;
     }
@@ -48,23 +51,22 @@ public sealed class LanternSwitch : MonoBehaviour
         bool first = !hasSwitchedOnce;
         hasSwitchedOnce = true;
         float bellDuration = maelaAudio ? maelaAudio.PlayLanternBell() : 0.85f;
+        if (AudioManager.Instance) AudioManager.Instance.DuckMusicForBell(bellDuration);
         bool targetMemory = !GameState.Instance.MemoryLayer;
-        if (first && player) player.ControlsLocked = true;
+        if (first && player) player.SetControlLock(PlayerController.ControlLock.LanternBell, true);
         if (!first) ChangeWorld(targetMemory);
         yield return new WaitForSecondsRealtime(Mathf.Max(0.1f, bellDuration));
         if (first) ChangeWorld(targetMemory);
-        if (player) player.ControlsLocked = false;
+        if (first && player) player.SetControlLock(PlayerController.ControlLock.LanternBell, false);
         bellPlaying = false;
     }
 
     private void ChangeWorld(bool isMemory)
     {
-        if (!isMemory && player && player.IsClimbing) player.DropToGroundSafely();
         GameState.Instance.SetMemoryLayer(isMemory);
         ApplyLight(isMemory, true);
-        if (isMemory)
-            foreach (var ladder in FindObjectsByType<LadderClimbZone>(FindObjectsSortMode.None))
-                ladder.TryShowFirstMemoryHint(player);
+        var hint = FindFirstObjectByType<LanternProgressHint>();
+        if (hint) hint.Hide();
     }
 
     private void ApplyLight(bool memory, bool animate)
@@ -90,6 +92,12 @@ public sealed class LanternSwitch : MonoBehaviour
         globalLight.color = targetColor;
         globalLight.intensity = targetIntensity;
         lightBlend = null;
+    }
+
+    private void OnDisable()
+    {
+        if (player) player.SetControlLock(PlayerController.ControlLock.LanternBell, false);
+        bellPlaying = false;
     }
 
     private void OnDestroy() { if (Instance == this) Instance = null; }

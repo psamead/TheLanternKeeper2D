@@ -28,10 +28,13 @@ public sealed class EndTrigger_TEMP : MonoBehaviour
     {
         loading = true;
         var player = FindFirstObjectByType<PlayerController>();
-        if (player) player.enabled = false;
+        if (player) player.SetControlLock(PlayerController.ControlLock.EndCard, true);
+        var hint = FindFirstObjectByType<LanternProgressHint>();
+        if (hint) hint.Hide();
         if (fade)
         {
             fade.gameObject.SetActive(true);
+            fade.blocksRaycasts = true;
             float start = fade.alpha;
             for (float t = 0f; t < fadeSeconds; t += Time.unscaledDeltaTime)
             {

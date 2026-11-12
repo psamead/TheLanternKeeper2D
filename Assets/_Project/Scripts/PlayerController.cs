@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-// Maela movement for the Home demo: A/D or arrows to move, Shift to walk, Space/W/Up to jump, E = raise lantern.
+// Maela movement for the Home demo: A/D or arrows to move, Shift to walk, Space/W/Up to jump.
 // Drives Maela.controller parameters: Speed, Grounded, VelY, RaiseLantern.
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     [FormerlySerializedAs("moveSpeed")] public float runSpeed = 3.2f;
     public float walkSpeed = 0.8f;
     [Header("Jump")] public float jumpVelocity = 6.5f;
-    [Header("Ladder")] public float ladderSpeed = 2.1f;
     public float coyoteTime = 0.08f, jumpBuffer = 0.1f;
     [Header("Ground check")] public LayerMask groundMask = ~0;
     public Vector2 groundBoxSize = new Vector2(0.3f, 0.06f);
@@ -22,24 +21,29 @@ public class PlayerController : MonoBehaviour
     MaelaAudio maelaAudio;
     float lastGrounded = -1, lastJumpPress = -1, lanternActionEndsAt;
     bool grounded, lanternActionActive, lockAllDuringLantern;
-    LadderClimbZone nearbyLadder;
-    bool climbing;
-    float normalGravityScale = 1f;
+    [System.Flags]
+    public enum ControlLock { None = 0, LanternBell = 1, AtticTransition = 2, EndCard = 4 }
+    private ControlLock controlLocks;
 
     public event System.Action OnJump;
     public event System.Action OnLanternRaised;
     public bool IsGrounded => grounded;
     public bool IsWalking { get; private set; }
     public bool LanternLocked => lanternActionActive && lockAllDuringLantern;
-    public bool IsClimbing => climbing;
-    public bool ControlsLocked { get; set; }
+    public bool ControlsLocked => controlLocks != ControlLock.None;
+
+    public void SetControlLock(ControlLock owner, bool locked)
+    {
+        if (locked) controlLocks |= owner;
+        else controlLocks &= ~owner;
+        if (locked && rb) rb.linearVelocity = Vector2.zero;
+    }
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-        normalGravityScale = rb.gravityScale;
         maelaAudio = GetComponent<MaelaAudio>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visual && animator) visual = animator.transform;
@@ -51,10 +55,10 @@ public class PlayerController : MonoBehaviour
             CompleteLanternAction();
 
         var k = Keyboard.current;
-        if (!lanternActionActive && LanternSwitch.Instance == null && k != null && k.eKey.wasPressedThisFrame)
+        if (!ControlsLocked && !StoryboardPlayer.AnyPlaybackActive && !lanternActionActive && LanternSwitch.Instance == null && k != null && k.eKey.wasPressedThisFrame)
             RaiseLantern(true);
 
-        if (ControlsLocked)
+        if (ControlsLocked || StoryboardPlayer.AnyPlaybackActive)
         {
             rb.linearVelocity = Vector2.zero;
             if (animator)
@@ -63,30 +67,6 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat("VelY", 0f);
             }
             return;
-        }
-
-        if (climbing && nearbyLadder != null && nearbyLadder.IsClimbable)
-        {
-            if (k != null && k.spaceKey.wasPressedThisFrame)
-            {
-                ExitLadder(true);
-            }
-            else
-            {
-                float climb = 0f;
-                if (k != null && (k.wKey.isPressed || k.upArrowKey.isPressed)) climb += 1f;
-                if (k != null && (k.sKey.isPressed || k.downArrowKey.isPressed)) climb -= 1f;
-                rb.gravityScale = 0f;
-                rb.linearVelocity = new Vector2(0f, climb * ladderSpeed);
-                grounded = false;
-                if (animator)
-                {
-                    animator.SetFloat("Speed", 0f);
-                    animator.SetFloat("VelY", climb * ladderSpeed);
-                    animator.SetBool("Grounded", false);
-                }
-                return;
-            }
         }
 
         float x = 0;
@@ -120,49 +100,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("VelY", rb.linearVelocity.y);
             animator.SetBool("Grounded", grounded);
         }
-    }
-
-    public void EnterLadder(LadderClimbZone ladder)
-    {
-        if (ladder == null || !ladder.IsClimbable) return;
-        nearbyLadder = ladder;
-        climbing = true;
-        rb.gravityScale = 0f;
-        rb.linearVelocity = Vector2.zero;
-    }
-
-    public void LeaveLadder(LadderClimbZone ladder)
-    {
-        if (nearbyLadder != ladder) return;
-        if (climbing) ExitLadder(false);
-        nearbyLadder = null;
-    }
-
-    public void DropToGroundSafely()
-    {
-        ExitLadder(false);
-        var hits = Physics2D.RaycastAll(transform.position, Vector2.down, 20f, groundMask);
-        RaycastHit2D best = default;
-        foreach (var hit in hits)
-            if (hit.collider != null && hit.collider.attachedRigidbody != rb && !hit.collider.isTrigger &&
-                (best.collider == null || hit.distance < best.distance)) best = hit;
-        if (best.collider != null)
-        {
-            float halfHeight = GetComponent<Collider2D>().bounds.extents.y;
-            Vector3 p = transform.position;
-            p.y = best.point.y + halfHeight + 0.03f;
-            transform.position = p;
-            rb.position = p;
-        }
-        rb.linearVelocity = Vector2.zero;
-    }
-
-    private void ExitLadder(bool jumpOff)
-    {
-        climbing = false;
-        rb.gravityScale = normalGravityScale;
-        rb.linearVelocity = jumpOff ? new Vector2(rb.linearVelocity.x, jumpVelocity) : Vector2.zero;
-        if (nearbyLadder == null || !nearbyLadder.IsClimbable) nearbyLadder = null;
     }
 
     public bool RaiseLantern(bool lockAll)

@@ -40,6 +40,17 @@ public class StoryboardPlayer : MonoBehaviour
         baseCaptionFontSize = captionText.fontSize;
         baseCaptionColor = captionText.color;
         baseCaptionMaterial = captionText.fontSharedMaterial;
+        // The gameplay scene remains loaded under Story A. Keep every frame fully covered.
+        var backdrop = new GameObject("Opaque Story Backdrop", typeof(RectTransform), typeof(Image));
+        backdrop.transform.SetParent(layerA.transform.parent, false);
+        backdrop.transform.SetAsFirstSibling();
+        var rect = backdrop.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        var image = backdrop.GetComponent<Image>();
+        image.color = Color.black;
+        image.raycastTarget = true;
     }
 
     void Start()
@@ -52,10 +63,17 @@ public class StoryboardPlayer : MonoBehaviour
         foreach (var material in captionMaterials.Values)
             if (material) Destroy(material);
         captionMaterials.Clear();
+        if (IsPlaying) { IsPlaying = false; AnyPlaybackActive = false; }
+    }
+
+    void OnDisable()
+    {
+        if (IsPlaying) { IsPlaying = false; AnyPlaybackActive = false; }
     }
 
     void Update()
     {
+        if (!IsPlaying) return;
         var k = Keyboard.current; var m = Mouse.current;
         if (k != null && k.escapeKey.wasPressedThisFrame) RequestSkipAll();
         else if ((k != null && k.anyKey.wasPressedThisFrame) || (m != null && m.leftButton.wasPressedThisFrame)) RequestAdvance();
@@ -63,6 +81,20 @@ public class StoryboardPlayer : MonoBehaviour
 
     public void RequestAdvance() => skipFrame = true;
     public void RequestSkipAll() => skipAll = true;
+
+    public void ShowFinalFrame()
+    {
+        if (data == null || data.frames == null || data.frames.Length == 0) return;
+        var frame = data.frames[data.frames.Length - 1];
+        layerA.texture = frame.image ? frame.image.texture : null;
+        layerA.transform.SetSiblingIndex(Mathf.Max(layerA.transform.GetSiblingIndex(), layerB.transform.GetSiblingIndex()));
+        KenBurns(layerA, frame, 1f);
+        SetAlpha(layerA, 1f);
+        SetAlpha(layerB, 0f);
+        ApplyCaptionLayout(frame);
+        captionText.text = frame.caption;
+        captionGroup.alpha = 1f;
+    }
 
     public IEnumerator Play()
     {
@@ -87,6 +119,7 @@ public class StoryboardPlayer : MonoBehaviour
                 back.texture = videoTexture; back.uvRect = new Rect(0, 0, 1, 1); videoPlayer.Play();
             }
             else back.texture = f.image ? f.image.texture : null;
+            back.transform.SetSiblingIndex(Mathf.Max(layerA.transform.GetSiblingIndex(), layerB.transform.GetSiblingIndex()));
 
             float len = isVideo ? Mathf.Min((float)f.video.length, f.duration > 0 ? Mathf.Max(f.duration, 1f) : 999f) : f.duration;
             ApplyCaptionLayout(f);
@@ -95,7 +128,7 @@ public class StoryboardPlayer : MonoBehaviour
             for (float t = 0; t < data.crossFade && !skipAll; t += Time.deltaTime)
             {
                 float u = t / data.crossFade;
-                SetAlpha(back, u); SetAlpha(front, 1 - u); captionGroup.alpha = Mathf.Clamp01(u * 1.5f - 0.5f);
+                SetAlpha(back, u); captionGroup.alpha = Mathf.Clamp01(u * 1.5f - 0.5f);
                 if (!isVideo) KenBurns(back, f, t / len);
                 yield return null;
             }

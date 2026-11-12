@@ -19,7 +19,11 @@ public static class SceneLoader
             return;
         }
         if (Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            if (sceneName == "03_EndCard" && AudioManager.Instance)
+                AudioManager.Instance.CaptureForEndCard();
             SceneManager.LoadScene(sceneName);
+        }
         else
             UnityEngine.Debug.LogError($"Scene '{sceneName}' is not in Build Settings.");
     }

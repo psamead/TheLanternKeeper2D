@@ -19,7 +19,7 @@
 - 角色：2D Animation + PSD Importer（`.psb` 骨骼，PPU 200）；剪纸式 Transform 骨骼，动作由 `Assets/_Project/Editor/MaelaAnimBuilder.cs` 生成（数据源 `SharedWorkFolder/TechArtAsset/Characters/Maela/_work/anim_v2/poses.py`），不要手改 .anim。
 - **场景结构（11-08）**：`Core_Persistent` 常驻（Maela、Main Camera = 唯一 AudioListener、Cinemachine + Confiner2D、Global Light 2D、EventSystem、`GameState` / `AudioManager` / `LevelLoader` 单例）；关卡（`01_Home` …）叠加加载，只放关卡内容 + `LevelInfo` + `SpawnPoint` + `LevelBootstrap`。菜单、序章、EndCard 是普通场景。不要再用 DontDestroyOnLoad 带音频。
 - **Maela PSB 导入规则**：图层 ID / 名字 / 画布尺寸不能变；外框变大时按 Claude 准备的 patched meta（A 路）导入，跑 Tools ▸ Lantern Keeper ▸ **Check Maela Sprite Rects** 必须 PASS，再跑一次 **Realign Maela Sprites**；前后顺序只改 prefab 的 sortingOrder。
-- 操作：A/D 或方向键移动（默认跑），Shift 慢走，Space/W 跳，E 举灯（规则见 DEMO_IMPLEMENTATION_PLAN 灯笼切换），Esc 回菜单。
+- 操作：A/D 或方向键移动（默认跑），Shift 慢走，Space/W/Up 跳，T 拾灯，E 举灯/切换世界，Esc 回菜单。记忆层完整梯下自动淡变进阁楼，不使用手动攀爬。Home 本轮镜头正交 Size 3.45，阁楼 3.4；以上是 2026-11-13 实际场景值。
 
 ## 范围
 - 只做 Demo（2026-11-07 缩小）：00_StartMenu → 序章（故事版 P）→ 01_Home（含故事版 A）→ 03_EndCard（故事版 B），4–6 分钟。`02_Harbor` 留给完整版，不进 Build Settings。

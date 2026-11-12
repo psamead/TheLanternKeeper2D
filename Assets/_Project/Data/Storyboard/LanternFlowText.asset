@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb70769d84e2b5641b8596713d693e07, type: 3}
   m_Name: LanternFlowText
   m_EditorClassIdentifier: Assembly-CSharp::LanternFlowText
-  pickupPrompt: W
+  pickupPrompt: Press W
   raiseHint: Press E
   backToMenu: Back to Menu
   quit: Quit

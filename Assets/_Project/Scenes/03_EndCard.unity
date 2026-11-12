@@ -636,6 +636,8 @@ MonoBehaviour:
   backLabel: {fileID: 608708542}
   quitLabel: {fileID: 1438910891}
   flowText: {fileID: 11400000, guid: 6827d58c431f27e47a97e2dbd9b4afd9, type: 2}
+  storyboardMusic: {fileID: 2065033583}
+  musicFadeSeconds: 1.5
 --- !u!4 &621834698
 Transform:
   m_ObjectHideFlags: 0
@@ -687,8 +689,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -44}
-  m_SizeDelta: {x: 480, y: 68}
+  m_AnchoredPosition: {x: 0, y: -36}
+  m_SizeDelta: {x: 420, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &699091740
 MonoBehaviour:
@@ -1049,8 +1051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 48}
-  m_SizeDelta: {x: 480, y: 68}
+  m_AnchoredPosition: {x: 0, y: 22}
+  m_SizeDelta: {x: 420, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &778220084
 MonoBehaviour:
@@ -1633,8 +1635,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 220}
-  m_SizeDelta: {x: 700, y: 220}
+  m_AnchoredPosition: {x: 0, y: 162}
+  m_SizeDelta: {x: 520, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1348295496
 MonoBehaviour:
@@ -1649,7 +1651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.025, g: 0.045, b: 0.075, a: 0.9}
+  m_Color: {r: 0.025, g: 0.045, b: 0.075, a: 0.28}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2061,7 +2063,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: f769c43b7e57d154ca01a3c0977efea5, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.6
   m_Pitch: 1
   Loop: 1

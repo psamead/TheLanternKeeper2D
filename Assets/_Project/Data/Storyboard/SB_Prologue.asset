@@ -17,20 +17,24 @@ MonoBehaviour:
     video: {fileID: 0}
     caption: 'On the coast of Brittany,
 
-      the old lighthouse has gone dark.'
+      the old lighthouse has
+
+      gone
+      dark.'
     duration: 6
     anchorMin: {x: 0.51, y: 0.36}
     anchorMax: {x: 0.82, y: 0.71}
     align: 514
     wordWrap: 0
-    fontScale: 1.5
+    fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
+    captionDilate: 0.17
     enableUnderlay: 1
-    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.55}
-    underlayOffset: {x: 0, y: -0.3}
+    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.78039217}
+    underlayOffset: {x: 0.8, y: -0.8}
     underlayDilate: 0.2
-    underlaySoftness: 0.65
+    underlaySoftness: 0.18
     zoomFrom: 1
     zoomTo: 1.08
     panFrom: {x: 0, y: 0}
@@ -46,11 +50,12 @@ MonoBehaviour:
     fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
+    captionDilate: 0.17
     enableUnderlay: 1
-    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.6}
-    underlayOffset: {x: 0, y: -0.3}
+    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.78039217}
+    underlayOffset: {x: 0.8, y: -0.8}
     underlayDilate: 0.2
-    underlaySoftness: 0.65
+    underlaySoftness: 0.18
     zoomFrom: 1.08
     zoomTo: 1
     panFrom: {x: 0.15, y: 0}
@@ -66,11 +71,12 @@ MonoBehaviour:
     fontScale: 0.85
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
+    captionDilate: 0.17
     enableUnderlay: 1
-    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.55}
-    underlayOffset: {x: 0, y: -0.3}
+    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.78039217}
+    underlayOffset: {x: 0.8, y: -0.8}
     underlayDilate: 0.2
-    underlaySoftness: 0.65
+    underlaySoftness: 0.18
     zoomFrom: 1
     zoomTo: 1.08
     panFrom: {x: 0, y: 0}
@@ -86,11 +92,12 @@ MonoBehaviour:
     fontScale: 1
     captionColor: {r: 0.9411765, g: 0.93333334, b: 0.81960785, a: 1}
     overrideCaptionColor: 1
+    captionDilate: 0.17
     enableUnderlay: 1
-    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.55}
-    underlayOffset: {x: 0, y: -0.3}
+    underlayColor: {r: 0.043137256, g: 0.101960786, b: 0.18039216, a: 0.78039217}
+    underlayOffset: {x: 0.8, y: -0.8}
     underlayDilate: 0.2
-    underlaySoftness: 0.65
+    underlaySoftness: 0.18
     zoomFrom: 1
     zoomTo: 1.1
     panFrom: {x: 0, y: 0}

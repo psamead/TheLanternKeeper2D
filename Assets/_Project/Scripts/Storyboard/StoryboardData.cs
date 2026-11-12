@@ -22,6 +22,7 @@ public class StoryboardData : ScriptableObject
         [Header("Caption appearance")]
         public Color captionColor = Color.white;
         public bool overrideCaptionColor;
+        [Range(0f, 1f)] public float captionDilate = 0.17f;
         public bool enableUnderlay;
         public Color underlayColor = new Color(11f / 255f, 26f / 255f, 46f / 255f, 0.6f);
         public Vector2 underlayOffset = new Vector2(0f, -0.5f);

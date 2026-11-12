@@ -25,6 +25,9 @@ public class StoryboardPlayer : MonoBehaviour
     public static bool AnyPlaybackActive { get; private set; }
     public bool IsPlaying { get; private set; }
     public bool WasSkipped { get; private set; }
+    public int CurrentFrameIndex { get; private set; } = -1;
+    public float CurrentFrameElapsed { get; private set; }
+    public RawImage CurrentFrameImage => front;
 
     bool skipFrame, skipAll; RawImage front, back;
     float baseCaptionFontSize;
@@ -54,9 +57,12 @@ public class StoryboardPlayer : MonoBehaviour
     void Update()
     {
         var k = Keyboard.current; var m = Mouse.current;
-        if (k != null && k.escapeKey.wasPressedThisFrame) skipAll = true;
-        else if ((k != null && k.anyKey.wasPressedThisFrame) || (m != null && m.leftButton.wasPressedThisFrame)) skipFrame = true;
+        if (k != null && k.escapeKey.wasPressedThisFrame) RequestSkipAll();
+        else if ((k != null && k.anyKey.wasPressedThisFrame) || (m != null && m.leftButton.wasPressedThisFrame)) RequestAdvance();
     }
+
+    public void RequestAdvance() => skipFrame = true;
+    public void RequestSkipAll() => skipAll = true;
 
     public IEnumerator Play()
     {
@@ -70,6 +76,8 @@ public class StoryboardPlayer : MonoBehaviour
         yield return Fade(blackFade, 1, 0, 0.6f);
         for (int i = 0; i < data.frames.Length && !skipAll; i++)
         {
+            CurrentFrameIndex = i;
+            CurrentFrameElapsed = 0f;
             var f = data.frames[i]; skipFrame = false;
             bool isVideo = f.video != null && videoPlayer != null;
             if (isVideo)
@@ -95,18 +103,21 @@ public class StoryboardPlayer : MonoBehaviour
             (front, back) = (back, front);
             for (float t = data.crossFade; t < len && !skipFrame && !skipAll; t += Time.deltaTime)
             {
+                CurrentFrameElapsed = t;
                 if (!isVideo) KenBurns(front, f, t / len);
                 yield return null;
             }
-            if (!isVideo) KenBurns(front, f, 1f);
+            // An advance/skip freezes the outgoing pose exactly where it was pressed.
+            // Only a frame that played to completion may finish at its end pose.
+            if (!isVideo && !skipFrame && !skipAll) KenBurns(front, f, 1f);
 #if UNITY_EDITOR
             if (data != null && (data.name == "SB_Prologue" || data.name == "SB_LanternOrigin_A" || data.name == "SB_Ending_B"))
             {
                 ValidateCaptionBounds(f, i);
                 if (UnityEditor.EditorPrefs.GetBool("PrologueCaptionLayout.CaptureEnabled", false))
                 {
-                    if (data.name == "SB_Prologue" && i > 0 && i < 3)
-                        yield return CaptureCaptionLayoutScreenshot(i);
+                    if (data.name == "SB_Prologue")
+                        yield return CaptureStoryboardFrame(i, "P");
                     else if (data.name == "SB_LanternOrigin_A" || data.name == "SB_Ending_B")
                         yield return CaptureStoryboardFrame(i, data.name == "SB_LanternOrigin_A" ? "A" : "B");
                 }
@@ -151,18 +162,14 @@ public class StoryboardPlayer : MonoBehaviour
         captionText.fontSize = baseCaptionFontSize * Mathf.Max(0.01f, frame.fontScale);
         captionText.color = frame.overrideCaptionColor ? frame.captionColor : baseCaptionColor;
 
-        if (!frame.enableUnderlay)
-        {
-            captionText.fontSharedMaterial = baseCaptionMaterial;
-            return;
-        }
-
         if (!captionMaterials.TryGetValue(frame, out var material) || !material)
         {
             material = new Material(baseCaptionMaterial) { name = "Storyboard Caption Underlay" };
-            material.EnableKeyword("UNDERLAY_ON");
             captionMaterials[frame] = material;
         }
+        if (frame.enableUnderlay) material.EnableKeyword("UNDERLAY_ON");
+        else material.DisableKeyword("UNDERLAY_ON");
+        if (material.HasProperty("_FaceDilate")) material.SetFloat("_FaceDilate", frame.captionDilate);
         material.SetColor("_UnderlayColor", frame.underlayColor);
         material.SetFloat("_UnderlayOffsetX", frame.underlayOffset.x);
         material.SetFloat("_UnderlayOffsetY", frame.underlayOffset.y);

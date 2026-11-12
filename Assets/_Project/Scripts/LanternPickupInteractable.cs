@@ -12,6 +12,8 @@ public sealed class LanternPickupInteractable : MonoBehaviour
     private PlayerController nearbyPlayer;
     private PlayerController pickedPlayer;
     private bool pickedUp;
+    private float promptAlpha;
+    private float promptTargetAlpha;
 
     private void Awake()
     {
@@ -22,9 +24,16 @@ public sealed class LanternPickupInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (pickedUp || nearbyPlayer == null || Keyboard.current == null || !Keyboard.current.wKey.wasPressedThisFrame)
-            return;
-        PickUp();
+        if (prompt)
+        {
+            promptAlpha = Mathf.MoveTowards(promptAlpha, promptTargetAlpha, Time.deltaTime / 0.25f);
+            Color color = prompt.color;
+            color.a = promptAlpha;
+            prompt.color = color;
+            if (promptAlpha <= 0f && promptTargetAlpha <= 0f) prompt.gameObject.SetActive(false);
+        }
+        if (!pickedUp && nearbyPlayer != null && Keyboard.current != null && Keyboard.current.wKey.wasPressedThisFrame)
+            PickUp();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -73,6 +82,8 @@ public sealed class LanternPickupInteractable : MonoBehaviour
 
     private void SetPrompt(bool visible)
     {
-        if (prompt) prompt.gameObject.SetActive(visible);
+        if (!prompt) return;
+        promptTargetAlpha = visible ? 1f : 0f;
+        if (visible) prompt.gameObject.SetActive(true);
     }
 }

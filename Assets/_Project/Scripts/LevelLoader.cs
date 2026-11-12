@@ -82,6 +82,8 @@ public sealed class LevelLoader : MonoBehaviour
         globalLight.intensity = info.globalLightIntensity;
         if (info.musicClip != null || !info.keepMusicWhenNull)
             AudioManager.Instance.PlayMusic(info.musicClip, info.musicVolume, info.audioFadeSeconds);
+        else if (sceneName == "01_Home" && AudioManager.ConsumeRestoredPrologueMusic())
+            AudioManager.Instance.PlayMusic(null, 0f, 1.5f);
         AudioManager.Instance.PlayAmbience(info.ambienceClip, info.ambienceVolume, info.audioFadeSeconds);
         Scene previous = currentLevel;
         currentLevel = next;

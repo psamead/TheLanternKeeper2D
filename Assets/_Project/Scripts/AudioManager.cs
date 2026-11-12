@@ -34,9 +34,10 @@ public sealed class AudioManager : MonoBehaviour
     }
     private static Playback pendingMusic, pendingAmbience;
     private static bool hasHandoff;
+    private static bool restoredPrologueMusic;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetHandoff() { hasHandoff = false; pendingMusic = pendingAmbience = default; }
+    private static void ResetHandoff() { hasHandoff = false; restoredPrologueMusic = false; pendingMusic = pendingAmbience = default; }
 
     public static void CapturePrologue(AudioSource music, AudioSource ambience)
     {
@@ -55,9 +56,17 @@ public sealed class AudioManager : MonoBehaviour
         {
             pendingMusic.Restore(musicSources[0]);
             pendingAmbience.Restore(ambienceSources[0]);
+            restoredPrologueMusic = pendingMusic.playing;
             hasHandoff = false;
             pendingMusic = pendingAmbience = default;
         }
+    }
+
+    public static bool ConsumeRestoredPrologueMusic()
+    {
+        bool restored = restoredPrologueMusic;
+        restoredPrologueMusic = false;
+        return restored;
     }
 
     private static void Configure(AudioSource[] sources)

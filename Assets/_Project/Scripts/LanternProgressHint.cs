@@ -16,11 +16,17 @@ public sealed class LanternProgressHint : MonoBehaviour
 
     public void Show()
     {
-        if (!hint || !flowText) return;
-        hint.text = flowText.raiseHint;
+        if (!flowText) return;
+        ShowMessage(flowText.raiseHint, visibleSeconds);
+    }
+
+    public void ShowMessage(string message, float seconds)
+    {
+        if (!hint) return;
+        hint.text = message;
         hint.color = new Color(hint.color.r, hint.color.g, hint.color.b, 1f);
         visible = true;
-        hideAt = Time.time + visibleSeconds;
+        hideAt = Time.time + Mathf.Max(0.1f, seconds);
         hint.gameObject.SetActive(true);
     }
 

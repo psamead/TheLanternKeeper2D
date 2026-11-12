@@ -2640,6 +2640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1742966866}
   - component: {fileID: 1742966865}
+  - component: {fileID: 1742966867}
   m_Layer: 0
   m_Name: GameState
   m_TagString: Untagged
@@ -2674,6 +2675,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1742966867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742966864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85d59ca49331c34498031869350aef06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LanternSwitch
+  globalLight: {fileID: 706113606}
+  player: {fileID: 1782533361}
+  maelaAudio: {fileID: 1782533364}
+  presentColor: {r: 0.56078434, g: 0.6392157, b: 0.7490196, a: 1}
+  presentIntensity: 0.8
+  memoryColor: {r: 0.9490196, g: 0.76862746, b: 0.5411765, a: 1}
+  memoryIntensity: 0.92
+  lightBlendSeconds: 0.6
 --- !u!1 &1782533359
 GameObject:
   m_ObjectHideFlags: 0
@@ -2727,6 +2748,7 @@ MonoBehaviour:
   runSpeed: 3.2
   walkSpeed: 0.8
   jumpVelocity: 8
+  ladderSpeed: 2.1
   coyoteTime: 0.08
   jumpBuffer: 0.1
   groundMask:

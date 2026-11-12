@@ -18,6 +18,12 @@ public sealed class MaelaAudio : MonoBehaviour
 
     public float LanternRaiseDuration => lanternRaiseClip != null ? lanternRaiseClip.length : 0f;
 
+    public float PlayLanternBell()
+    {
+        PlayLanternRaise();
+        return LanternRaiseDuration;
+    }
+
     private void Awake()
     {
         source = GetComponent<AudioSource>();

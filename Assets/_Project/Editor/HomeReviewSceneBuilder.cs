@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>Applies the selected 2026-11-13 Home art and presentation to the existing scenes.</summary>
+/// <summary>Applies the Home art and presentation to the existing scenes.</summary>
 public static class HomeReviewSceneBuilder
 {
     private const string Art = "Assets/_Project/Art/Scenes/Home/";
@@ -32,9 +32,10 @@ public static class HomeReviewSceneBuilder
 
     private static void ImportSprites()
     {
+        ImportSprite(Art + "Home_Present_v1.png", false, 4096);
         ImportSprite(Art + "Home_Present_v3.png", false, 4096);
         ImportSprite(Art + "Attic_PerspectiveRef_v3.png", false, 4096);
-        ImportSprite(Art + "Ladder_Whole_v4.png", true, 8192);
+        ImportSprite(Art + "Ladder_Whole_v5.png", true, 8192);
         ImportSprite(Art + "Lantern_v4.png", true, 4096);
     }
 
@@ -116,11 +117,12 @@ public static class HomeReviewSceneBuilder
         if (!present || !memory || !level || !roomBounds || !attic || !whole || !pickup || !endTrigger)
             throw new InvalidOperationException("Home review requires the current Home scene objects.");
 
-        var homeSprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Home_Present_v3.png");
+        var presentSprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Home_Present_v1.png");
+        var memorySprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Home_Present_v3.png");
         Undo.RecordObject(present, "Replace Home art");
         Undo.RecordObject(memory, "Replace Memory Home art");
-        present.sprite = homeSprite;
-        memory.sprite = homeSprite;
+        present.sprite = presentSprite;
+        memory.sprite = memorySprite;
         present.GetComponent<WorldLayerObject>().mode = WorldLayerMode.Present;
         memory.GetComponent<WorldLayerObject>().mode = WorldLayerMode.Memory;
         SetBounds(roomBounds, present.bounds);
@@ -192,7 +194,7 @@ public static class HomeReviewSceneBuilder
         ladderArt.transform.localPosition = Vector3.zero;
         ladderArt.transform.localScale = Vector3.one * (5.8f / 42f);
         var ladderRenderer = Ensure<SpriteRenderer>(ladderArt);
-        ladderRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Ladder_Whole_v4.png");
+        ladderRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Ladder_Whole_v5.png");
         ladderRenderer.sharedMaterial = present.sharedMaterial;
         ladderRenderer.sortingOrder = 5;
         var ladderCollider = whole.GetComponent<BoxCollider2D>();
@@ -254,6 +256,12 @@ public static class HomeReviewSceneBuilder
         var inputHint = FindSceneObject("Input Hint")?.GetComponent<TMP_Text>();
         var controller = FindFirst<EndCardController>();
         if (!root || !back || !quit || !controller) throw new InvalidOperationException("EndCard button hierarchy is missing.");
+        if (root.Find("SelectionIcon") && root.Find("SelectionUnderline"))
+        {
+            SetSerialized(controller, "advanceHint", inputHint);
+            SaveActiveScene();
+            return;
+        }
         Undo.RecordObject(root, "Scale complete EndCard controls");
         root.sizeDelta = new Vector2(390f, 112f);
         SetButton(back, new Vector2(315f, 51f), new Vector2(0f, 18f));

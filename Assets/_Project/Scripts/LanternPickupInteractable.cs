@@ -32,14 +32,15 @@ public sealed class LanternPickupInteractable : MonoBehaviour
         if (player == null || pickedUp || StoryboardPlayer.AnyPlaybackActive) return;
         nearbyPlayer = player;
         if (!sharedHint) sharedHint = FindFirstObjectByType<LanternProgressHint>();
-        if (sharedHint && flowText) sharedHint.ShowFor(this, flowText.pickupPrompt, float.PositiveInfinity, 10);
+        if (sharedHint && flowText)
+            sharedHint.ShowFor(this, flowText.pickupPrompt, float.PositiveInfinity, 10,
+                transform, new Vector3(0f, 2.15f, 0f));
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (nearbyPlayer == null || other.GetComponentInParent<PlayerController>() != nearbyPlayer) return;
         nearbyPlayer = null;
-        if (sharedHint) sharedHint.HideFor(this);
     }
 
     private void PickUp()

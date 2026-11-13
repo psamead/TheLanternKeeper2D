@@ -12,6 +12,8 @@ public sealed class LanternProgressHint : MonoBehaviour
     private bool visible;
     private MonoBehaviour owner;
     private int priority;
+    private Transform activeAnchor;
+    private Vector3 activeOffset;
 
     private void Awake() => Hide();
 
@@ -25,11 +27,17 @@ public sealed class LanternProgressHint : MonoBehaviour
         => ShowFor(this, message, seconds, 0);
 
     public bool ShowFor(MonoBehaviour requester, string message, float seconds, int requestPriority)
+        => ShowFor(requester, message, seconds, requestPriority, null, worldOffset);
+
+    public bool ShowFor(MonoBehaviour requester, string message, float seconds, int requestPriority,
+        Transform anchor, Vector3 offset)
     {
         if (!hint || StoryboardPlayer.AnyPlaybackActive || (visible && owner && owner != requester && priority > requestPriority))
             return false;
         owner = requester;
         priority = requestPriority;
+        activeAnchor = anchor;
+        activeOffset = offset;
         hint.text = message;
         hint.color = new Color(hint.color.r, hint.color.g, hint.color.b, 1f);
         visible = true;
@@ -42,7 +50,8 @@ public sealed class LanternProgressHint : MonoBehaviour
     {
         if (!visible) return;
         if (StoryboardPlayer.AnyPlaybackActive) { Hide(); return; }
-        if (followTarget) transform.position = followTarget.position + worldOffset;
+        Transform target = activeAnchor ? activeAnchor : followTarget;
+        if (target) transform.position = target.position + activeOffset;
         float remaining = hideAt - Time.time;
         if (remaining <= 0f) { Hide(); return; }
         if (remaining < 0.6f)
@@ -54,6 +63,7 @@ public sealed class LanternProgressHint : MonoBehaviour
         visible = false;
         owner = null;
         priority = 0;
+        activeAnchor = null;
         if (hint) hint.gameObject.SetActive(false);
     }
 

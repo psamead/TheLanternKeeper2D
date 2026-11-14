@@ -13,10 +13,21 @@ public sealed class LadderAtticTransition : MonoBehaviour
     private PlayerController transitionPlayer;
     private bool transitioning;
     private bool used;
+    private BoxCollider2D entry;
+    private readonly Collider2D[] overlaps = new Collider2D[16];
+    private SpriteRenderer ladderRenderer;
+
+    public IEnumerator WaitForVisibleLadder()
+    {
+        while (ladderRenderer && ladderRenderer.color.a < 0.999f) yield return null;
+    }
 
     private void Awake()
     {
-        GetComponent<BoxCollider2D>().isTrigger = true;
+        entry = GetComponent<BoxCollider2D>();
+        entry.isTrigger = true;
+        entry.enabled = false;
+        ladderRenderer = GetComponent<SpriteRenderer>();
         if (fullScreenFade)
         {
             fullScreenFade.alpha = 0f;
@@ -37,6 +48,19 @@ public sealed class LadderAtticTransition : MonoBehaviour
 
     private void Update()
     {
+        bool armed = !used && GameState.Instance && GameState.Instance.TutorialExited && GameState.Instance.MemoryLayer;
+        entry.enabled = armed;
+        nearby = null;
+        if (armed)
+        {
+            var filter = new ContactFilter2D { useTriggers = false };
+            int count = entry.Overlap(filter, overlaps);
+            for (int i = 0; i < count; i++)
+            {
+                var candidate = overlaps[i].GetComponentInParent<PlayerController>();
+                if (candidate) { nearby = candidate; break; }
+            }
+        }
         if (used || transitioning || !nearby || !atticLanding || !atticCamera || !fullScreenFade ||
             StoryboardPlayer.AnyPlaybackActive || GameState.Instance == null ||
             !GameState.Instance.HasLantern || !GameState.Instance.MemoryLayer || nearby.ControlsLocked ||
@@ -57,13 +81,18 @@ public sealed class LadderAtticTransition : MonoBehaviour
         fullScreenFade.blocksRaycasts = true;
         yield return Fade(0f, 1f);
 
-        player.transform.position = atticLanding.position;
-        body.position = atticLanding.position;
-        body.linearVelocity = Vector2.zero;
-        Physics2D.SyncTransforms();
-        atticCamera.SetAtticFraming(true);
-        for (int i = 0; i < 90 && !player.IsGrounded; i++) yield return new WaitForFixedUpdate();
-        if (!player.IsGrounded) Debug.LogWarning("Attic landing did not report grounded before fade-in.", this);
+        if (!player.PlaceOnGround(atticLanding))
+        {
+            Debug.LogError("Attic landing has no grounded support; keeping black and controls locked.", this);
+            yield break;
+        }
+        atticCamera.LatchAttic();
+        yield return new WaitForFixedUpdate();
+        if (!player.IsGrounded)
+        {
+            Debug.LogError("Attic landing lost support before reveal; keeping black and controls locked.", this);
+            yield break;
+        }
         yield return null; // Allow the camera to render its new confined position under black.
         yield return Fade(1f, 0f);
         fullScreenFade.blocksRaycasts = false;

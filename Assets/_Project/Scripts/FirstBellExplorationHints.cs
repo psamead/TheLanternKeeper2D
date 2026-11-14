@@ -8,6 +8,22 @@ public sealed class FirstBellExplorationHints : MonoBehaviour
     [SerializeField] private TMP_Text brokenLadder;
     [SerializeField] private TMP_Text pressE;
     private PlayerController player;
+    [SerializeField, Min(0.01f)] private float exitFadeSeconds = 0.5f;
+    private bool exiting;
+
+    public System.Collections.IEnumerator ExitTutorial()
+    {
+        exiting = true;
+        foreach (var zone in FindObjectsByType<BrokenLadderHintZone>(FindObjectsSortMode.None)) zone.Retire();
+        for (float t = 0; t < exitFadeSeconds; t += Time.unscaledDeltaTime)
+        {
+            if (brokenLadder) brokenLadder.alpha = 1f - t / exitFadeSeconds;
+            if (pressE) pressE.alpha = 1f - t / exitFadeSeconds;
+            yield return null;
+        }
+        SetVisible(brokenLadder, false);
+        SetVisible(pressE, false);
+    }
 
     private void Awake()
     {
@@ -24,10 +40,13 @@ public sealed class FirstBellExplorationHints : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (exiting) return;
         var state = GameState.Instance;
-        bool operable = state && player && player.isActiveAndEnabled && !player.ControlsLocked &&
-            !player.LanternLocked && !StoryboardPlayer.AnyPlaybackActive && !state.MemoryLayer &&
-            state.ExplorationStage != GameState.FirstBellStage.Used;
+        bool ringing = LanternSwitch.Instance && LanternSwitch.Instance.IsBellPlaying && state && !state.TutorialExited;
+        bool operable = state && state.HasLantern && state.StoryACompleted && player &&
+            player.isActiveAndEnabled && !StoryboardPlayer.AnyPlaybackActive &&
+            (ringing || (!player.ControlsLocked && !player.LanternLocked && !state.MemoryLayer &&
+            state.ExplorationStage != GameState.FirstBellStage.Used));
         SetVisible(brokenLadder, operable && state.ExplorationStage >= GameState.FirstBellStage.Discovered);
         SetVisible(pressE, operable && state.ExplorationStage >= GameState.FirstBellStage.Inspected);
     }

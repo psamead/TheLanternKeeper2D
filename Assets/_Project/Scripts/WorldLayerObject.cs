@@ -36,7 +36,8 @@ public sealed class WorldLayerObject : MonoBehaviour
         bool visible = mode == WorldLayerMode.Both ||
                        (mode == WorldLayerMode.Memory && isMemory) ||
                        (mode == WorldLayerMode.Present && !isMemory);
-        foreach (var collider in colliders) if (collider) collider.enabled = visible;
+        foreach (var collider in colliders)
+            if (collider && !collider.GetComponent<LadderAtticTransition>()) collider.enabled = visible;
         if (fade != null) StopCoroutine(fade);
         if (animate && isActiveAndEnabled) fade = StartCoroutine(Fade(visible ? 1f : 0f));
         else SetAlpha(visible ? 1f : 0f);

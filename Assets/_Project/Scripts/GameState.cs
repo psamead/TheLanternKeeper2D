@@ -10,6 +10,8 @@ public sealed class GameState : MonoBehaviour
     public enum FirstBellStage { Unexplored, Discovered, Inspected, Used }
     private static FirstBellStage firstBellStage;
     private static bool storyACompleted;
+    private static bool tutorialExited;
+    public bool TutorialExited => tutorialExited;
     private static int explorationFrame = -1;
     public FirstBellStage ExplorationStage => firstBellStage;
     public bool StoryACompleted => storyACompleted;
@@ -33,7 +35,7 @@ public sealed class GameState : MonoBehaviour
 
     public bool RecordExploration(bool discovery, PlayerController player)
     {
-        if (!player || !player.isActiveAndEnabled || player.ControlsLocked || player.LanternLocked ||
+        if (!hasLantern || !storyACompleted || !player || !player.isActiveAndEnabled || player.ControlsLocked || player.LanternLocked ||
             StoryboardPlayer.AnyPlaybackActive || memoryLayer || Time.frameCount == explorationFrame) return false;
         if (discovery ? firstBellStage != FirstBellStage.Unexplored : firstBellStage != FirstBellStage.Discovered)
             return false;
@@ -43,6 +45,7 @@ public sealed class GameState : MonoBehaviour
     }
 
     public void RecordFirstBell() => firstBellStage = FirstBellStage.Used;
+    public void CompleteTutorial() => tutorialExited = true;
 
     public static void ResetForMenu()
     {
@@ -51,6 +54,7 @@ public sealed class GameState : MonoBehaviour
         memoryLayer = false;
         firstBellStage = FirstBellStage.Unexplored;
         storyACompleted = false;
+        tutorialExited = false;
         explorationFrame = -1;
         if (changed && Instance != null) Instance.OnWorldSwitched?.Invoke(false);
     }

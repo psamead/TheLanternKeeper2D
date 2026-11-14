@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: SB_Ending_B
   m_EditorClassIdentifier: Assembly-CSharp::StoryboardData
   frames:
-  - image: {fileID: 21300000, guid: ed35a7bd753e31349904fe2fc2e2e0ec, type: 3}
+  - audioCue:
+      enabled: 1
+      musicVolume: 0.6
+      musicStartVolume: -1
+      ambience: {fileID: 8300000, guid: 1d20c026ee08b4c45a5e5a9ae4db8f73, type: 3}
+      ambienceVolume: 0.4
+      fadeSeconds: 1
+    image: {fileID: 21300000, guid: ed35a7bd753e31349904fe2fc2e2e0ec, type: 3}
     video: {fileID: 0}
     caption: What you forget doesn't vanish. It sinks.
     duration: 6
@@ -34,7 +41,14 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: -0.1, y: 0.03}
-  - image: {fileID: 21300000, guid: a364601adba3f7b4ba4f5635933112c5, type: 3}
+  - audioCue:
+      enabled: 1
+      musicVolume: 0.6
+      musicStartVolume: -1
+      ambience: {fileID: 8300000, guid: 1d20c026ee08b4c45a5e5a9ae4db8f73, type: 3}
+      ambienceVolume: 0.4
+      fadeSeconds: 1
+    image: {fileID: 21300000, guid: a364601adba3f7b4ba4f5635933112c5, type: 3}
     video: {fileID: 0}
     caption: Twenty years ago, on Anaon night, two fishermen sailed when no one should.
     duration: 6
@@ -55,7 +69,14 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: 0.1, y: -0.03}
-  - image: {fileID: 21300000, guid: 83ef0b0959419a9439dbfdf7a9da14b4, type: 3}
+  - audioCue:
+      enabled: 1
+      musicVolume: 0.6
+      musicStartVolume: -1
+      ambience: {fileID: 8300000, guid: 1d20c026ee08b4c45a5e5a9ae4db8f73, type: 3}
+      ambienceVolume: 0.4
+      fadeSeconds: 1
+    image: {fileID: 21300000, guid: 83ef0b0959419a9439dbfdf7a9da14b4, type: 3}
     video: {fileID: 0}
     caption: One jumped back to shore. The other followed a light that never brought
       him home.
@@ -77,7 +98,14 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: -0.1, y: 0.03}
-  - image: {fileID: 21300000, guid: 692254a3d72f2084b9a237650fec34a4, type: 3}
+  - audioCue:
+      enabled: 1
+      musicVolume: 0.6
+      musicStartVolume: -1
+      ambience: {fileID: 8300000, guid: 1d20c026ee08b4c45a5e5a9ae4db8f73, type: 3}
+      ambienceVolume: 0.4
+      fadeSeconds: 1
+    image: {fileID: 21300000, guid: 692254a3d72f2084b9a237650fec34a4, type: 3}
     video: {fileID: 0}
     caption: "Last year, the keeper put out the lamp \u2014 and the sea took him
       too."
@@ -99,7 +127,14 @@ MonoBehaviour:
     zoomTo: 1.06
     panFrom: {x: 0, y: 0}
     panTo: {x: 0.1, y: -0.03}
-  - image: {fileID: 21300000, guid: 1d6bcb9db84ee1e47a8912609e801047, type: 3}
+  - audioCue:
+      enabled: 1
+      musicVolume: 0.6
+      musicStartVolume: -1
+      ambience: {fileID: 8300000, guid: 1d20c026ee08b4c45a5e5a9ae4db8f73, type: 3}
+      ambienceVolume: 0.4
+      fadeSeconds: 1
+    image: {fileID: 21300000, guid: 1d6bcb9db84ee1e47a8912609e801047, type: 3}
     video: {fileID: 0}
     caption: "Six days until Anaon night. To be continued\u2026"
     duration: 8

@@ -53,11 +53,7 @@ public sealed class LanternProgressHint : MonoBehaviour
         Transform target = activeAnchor ? activeAnchor : followTarget;
         if (target)
         {
-            // Exploration may finish before pickup. Keep Press T legible below the
-            // fixed Press E prompt until pickup removes this shared prompt.
-            bool besideExplorationHint = owner is LanternPickupInteractable && GameState.Instance &&
-                GameState.Instance.ExplorationStage == GameState.FirstBellStage.Inspected;
-            transform.position = target.position + activeOffset + (besideExplorationHint ? Vector3.down * 0.45f : Vector3.zero);
+            transform.position = target.position + activeOffset;
         }
         float remaining = hideAt - Time.time;
         if (remaining <= 0f) { Hide(); return; }

@@ -111,3 +111,12 @@ Audio follow-up on 2026-11-03: serialized the two Play On Awake music-source vol
 
 - Current behavior and evidence: `Docs/2026-11-15_FirstBell_Exploration.md`. Home now requires ordered discovery near the original lantern, then a fresh ladder-zone entry before the first E. Fixed Broken ladder and Press E hints persist independently; Story A completion restores only the session's earned state. Menu resets exploration and Story A readiness. Full recorded Menu-to-attic-window-to-B5 route and keyboard/mouse EndCard checks passed. EndCard options moved as a group; art/audio assets were unchanged.
 - Delivered video: `\\haoxi-surfacep\Administrator\Documents\MyFlie\AsArtPortfolioTeaching\Game_York\SharedWorkFolder\ForDesignScreenshot\2026-11-15_Home_FirstBell_Exploration\after\FirstBell_ContinuousRoute.mp4`. See the task record for exact bounds, hashes, test evidence and remaining owner review. Standalone Quit and physical listening remain unverified.
+
+
+## 2026-11-15 — Pickup/story/attic follow-up (supersedes first-bell round 1)
+
+Exploration now starts only after pickup AND Story A completion. A ends under black and returns Maela grounded at the door (-4.7,-3.2 anchor), stage zero. First E retains fixed hints through the full bell, fades them over .5 s, retires exploration colliders, then arms the independent ladder. The attic has a continuous shared floor and Ground boundaries; landing anchor (4.7,2.725), observed first visible root (4.7,2.7288), grounded. A/B page cues use separate wave/wind stems and preserve ArMorDu continuity; B5 keeps music/wind. Current backgrounds and EndCard placement are preserved.
+
+Detailed implementation, cue table, validation, evidence/hash and limits: `Docs/2026-11-15_Pickup_Story_Attic.md`. Full normal-speed 1920×1080 video with audio and frame review delivered to shared `ForDesignScreenshot/2026-11-15_Home_Pickup_Story_Attic/after/`. Edge cases, natural/skip/advance A, full route, attic boundaries, audio page state and natural/skip B5 passed. Subjective listening and placement approval remain with the owner. Temporary test assets and local capture file removed.
+
+Final Editor verification: Edit Mode, not compiling, exactly one clean `00_StartMenu`, zero runtime Player/GameState objects, temporary test scripts absent. Editor 已回到只开 00_StartMenu。

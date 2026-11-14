@@ -18,8 +18,6 @@ public sealed class EndCardController : MonoBehaviour
     [SerializeField] private RectTransform underline;
     [SerializeField] private LanternFlowText flowText;
     [SerializeField] private AudioSource storyboardMusic;
-    [SerializeField, Min(0f)] private float musicFadeSeconds = 1.5f;
-    private Coroutine musicFade;
     private int selectedIndex;
 
     private void Awake()
@@ -93,11 +91,11 @@ public sealed class EndCardController : MonoBehaviour
                 storyboardMusic.volume = 0f;
                 storyboardMusic.Play();
             }
-            StartMusicFade(0.6f);
         }
         if (storyboard)
         {
             storyboard.playOnStart = false;
+            storyboard.localMusic = storyboardMusic;
             storyboard.onFinished = ShowButtons;
             storyboard.StartCoroutine(storyboard.Play());
         }
@@ -106,7 +104,6 @@ public sealed class EndCardController : MonoBehaviour
 
     private void ShowButtons()
     {
-        if (storyboardMusic) StartMusicFade(0f);
         if (storyboard)
         {
             if (storyboard.WasSkipped) storyboard.ShowFinalFrame();
@@ -116,27 +113,6 @@ public sealed class EndCardController : MonoBehaviour
         if (buttonsRoot) buttonsRoot.SetActive(true);
         if (advanceHint) advanceHint.gameObject.SetActive(false);
         Select(0);
-    }
-
-    private void StartMusicFade(float target)
-    {
-        if (musicFade != null) StopCoroutine(musicFade);
-        musicFade = StartCoroutine(FadeMusic(target));
-    }
-
-    private System.Collections.IEnumerator FadeMusic(float target)
-    {
-        float start = storyboardMusic.volume;
-        float elapsed = 0f;
-        while (elapsed < musicFadeSeconds)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            storyboardMusic.volume = Mathf.Lerp(start, target, Mathf.Clamp01(elapsed / musicFadeSeconds));
-            yield return null;
-        }
-        storyboardMusic.volume = target;
-        if (target <= 0f) storyboardMusic.Stop();
-        musicFade = null;
     }
 
     public void BackToMenu()

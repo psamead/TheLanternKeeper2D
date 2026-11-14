@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public sealed class LanternPickupInteractable : MonoBehaviour
     [SerializeField] private LanternFlowText flowText;
     [SerializeField] private StoryboardPlayer storyboardA;
     [SerializeField] private LanternVisualState maelaLantern;
+    [SerializeField] private Transform returnAfterStoryA;
 
     private PlayerController nearbyPlayer;
     private PlayerController pickedPlayer;
@@ -57,35 +59,49 @@ public sealed class LanternPickupInteractable : MonoBehaviour
         if (trigger) trigger.enabled = false;
         var body = pickedPlayer.GetComponent<Rigidbody2D>();
         if (body) { body.linearVelocity = Vector2.zero; body.simulated = false; }
+        pickedPlayer.SetControlLock(PlayerController.ControlLock.StoryReturn, true);
         pickedPlayer.enabled = false;
         gameObject.SetActive(false);
 
-        if (AudioManager.Instance)
-        {
-            AudioManager.Instance.SetAmbienceDucked(true);
-            AudioManager.Instance.SetMusicDucked(true);
-        }
         storyboardA.layerA.transform.root.gameObject.SetActive(true);
+        storyboardA.onFinishUnderBlack = ReturnUnderBlack;
         storyboardA.onFinished = FinishStoryboard;
         storyboardA.StartCoroutine(storyboardA.Play());
     }
 
+    private IEnumerator ReturnUnderBlack()
+    {
+        pickedPlayer.enabled = true;
+        if (!pickedPlayer.PlaceOnGround(returnAfterStoryA))
+        {
+            Debug.LogError("Story A return has no grounded support; keeping black and controls locked.", this);
+            while (true) yield return null;
+        }
+        foreach (var zone in FindObjectsByType<BrokenLadderHintZone>(FindObjectsSortMode.None)) zone.ClearOccupancy();
+        var level = FindFirstObjectByType<LevelInfo>();
+        if (AudioManager.Instance && level)
+        {
+            AudioManager.Instance.SetNarrativeMusicVolume(level.musicVolume, 1f);
+            AudioManager.Instance.PlayAmbience(level.ambienceClip, level.ambienceVolume, 1f);
+        }
+        var camera = FindFirstObjectByType<Unity.Cinemachine.CinemachineCamera>();
+        if (camera) camera.PreviousStateIsValid = false;
+        yield return new WaitForFixedUpdate();
+        yield return null;
+        if (!pickedPlayer.IsGrounded)
+        {
+            Debug.LogError("Story A return lost support before reveal; keeping black.", this);
+            while (true) yield return null;
+        }
+        yield return storyboardA.RevealHomeUnderBlack();
+    }
+
     private void FinishStoryboard()
     {
-        if (AudioManager.Instance)
-        {
-            AudioManager.Instance.SetAmbienceDucked(false);
-            AudioManager.Instance.SetMusicDucked(false);
-        }
-        if (pickedPlayer)
-        {
-            var body = pickedPlayer.GetComponent<Rigidbody2D>();
-            if (body) body.simulated = true;
-            pickedPlayer.enabled = true;
-        }
+        if (GameState.Instance) GameState.Instance.CompleteStoryA();
+        if (pickedPlayer) pickedPlayer.SetControlLock(PlayerController.ControlLock.StoryReturn, false);
         if (storyboardA && storyboardA.layerA)
             storyboardA.layerA.transform.root.gameObject.SetActive(false);
-        if (GameState.Instance) GameState.Instance.CompleteStoryA();
     }
 
     private void OnDisable() { if (sharedHint) sharedHint.HideFor(this); }

@@ -6,7 +6,7 @@ public sealed class BackToMenu : MonoBehaviour
 {
     private void Update()
     {
-        if (StoryboardPlayer.AnyPlaybackActive || Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (StoryboardPlayer.BlocksGameplayInput || Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
             return;
 
         if (SceneManager.GetActiveScene().name == "03_EndCard")

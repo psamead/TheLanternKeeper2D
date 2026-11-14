@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     float lastGrounded = -1, lastJumpPress = -1, lanternActionEndsAt;
     bool grounded, lanternActionActive, lockAllDuringLantern;
     [System.Flags]
-    public enum ControlLock { None = 0, LanternBell = 1, AtticTransition = 2, EndCard = 4 }
+    public enum ControlLock { None = 0, LanternBell = 1, AtticTransition = 2, EndCard = 4, StoryReturn = 8 }
     private ControlLock controlLocks;
 
     public event System.Action OnJump;
@@ -37,6 +37,41 @@ public class PlayerController : MonoBehaviour
         if (locked) controlLocks |= owner;
         else controlLocks &= ~owner;
         if (locked && rb) rb.linearVelocity = Vector2.zero;
+        lastJumpPress = lastGrounded = -100f;
+    }
+
+    /// <summary>Place collider feet on real support near a scene anchor, under an opaque fade.</summary>
+    public bool PlaceOnGround(Transform anchor)
+    {
+        if (!anchor || !rb) return false;
+        rb.simulated = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        lastJumpPress = lastGrounded = -100f;
+        Physics2D.SyncTransforms();
+        float footOffset = float.PositiveInfinity;
+        foreach (var c in GetComponentsInChildren<Collider2D>())
+            if (c.enabled && !c.isTrigger && c.attachedRigidbody == rb)
+                footOffset = Mathf.Min(footOffset, c.bounds.min.y - transform.position.y);
+        if (float.IsPositiveInfinity(footOffset)) return false;
+        RaycastHit2D support = default;
+        foreach (var hit in Physics2D.RaycastAll(anchor.position + Vector3.up, Vector2.down, 2f, groundMask))
+            if (!hit.collider.isTrigger && hit.rigidbody != rb && hit.normal.y > 0.9f)
+            { support = hit; break; }
+        if (!support.collider) return false;
+        Vector3 position = new Vector3(anchor.position.x, support.point.y - footOffset + 0.002f, transform.position.z);
+        transform.position = position;
+        rb.position = position;
+        Physics2D.SyncTransforms();
+        FixedUpdate();
+        if (animator)
+        {
+            animator.SetFloat("Speed", 0f);
+            animator.SetFloat("VelY", 0f);
+            animator.SetBool("Grounded", grounded);
+            animator.Update(0f);
+        }
+        return grounded;
     }
 
     void Awake()
@@ -55,10 +90,10 @@ public class PlayerController : MonoBehaviour
             CompleteLanternAction();
 
         var k = Keyboard.current;
-        if (!ControlsLocked && !StoryboardPlayer.AnyPlaybackActive && !lanternActionActive && LanternSwitch.Instance == null && k != null && k.eKey.wasPressedThisFrame)
+        if (!ControlsLocked && !StoryboardPlayer.BlocksGameplayInput && !lanternActionActive && LanternSwitch.Instance == null && k != null && k.eKey.wasPressedThisFrame)
             RaiseLantern(true);
 
-        if (ControlsLocked || StoryboardPlayer.AnyPlaybackActive)
+        if (ControlsLocked || StoryboardPlayer.BlocksGameplayInput)
         {
             rb.linearVelocity = Vector2.zero;
             if (animator)
@@ -105,7 +140,7 @@ public class PlayerController : MonoBehaviour
     public bool RaiseLantern(bool lockAll)
     {
         if (GameState.Instance == null || !GameState.Instance.CanUseLantern || ControlsLocked ||
-            StoryboardPlayer.AnyPlaybackActive || !grounded || lanternActionActive || !animator)
+            StoryboardPlayer.BlocksGameplayInput || !grounded || lanternActionActive || !animator)
             return false;
 
         lanternActionActive = true;

@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 15559956}
   - component: {fileID: 15559958}
   - component: {fileID: 15559957}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Attic_WallR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,7 +359,7 @@ GameObject:
   - component: {fileID: 79983503}
   - component: {fileID: 79983505}
   - component: {fileID: 79983504}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Attic_Roof_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,7 +763,7 @@ Transform:
   m_GameObject: {fileID: 583881912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.2, y: 3.25, z: 0}
+  m_LocalPosition: {x: 4.7, y: 2.725, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1454,7 +1454,7 @@ Transform:
   m_GameObject: {fileID: 1076454151}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.8, y: 2.55, z: 0}
+  m_LocalPosition: {x: 6, y: 2.55, z: 0}
   m_LocalScale: {x: 42.500004, y: 2.125, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1504,7 +1504,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 0.19764704, y: 0.16470587}
   m_EdgeRadius: 0
 --- !u!212 &1076454154
 SpriteRenderer:
@@ -1914,7 +1914,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125562120}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -2368,6 +2368,7 @@ MonoBehaviour:
   flowText: {fileID: 11400000, guid: 6827d58c431f27e47a97e2dbd9b4afd9, type: 2}
   storyboardA: {fileID: 0}
   maelaLantern: {fileID: 0}
+  returnAfterStoryA: {fileID: 1774209374}
 --- !u!114 &1438910893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2889,6 +2890,7 @@ MonoBehaviour:
   flowText: {fileID: 11400000, guid: 6827d58c431f27e47a97e2dbd9b4afd9, type: 2}
   brokenLadder: {fileID: 1777562478}
   pressE: {fileID: 1099524308}
+  exitFadeSeconds: 0.5
 --- !u!4 &1568292808
 Transform:
   m_ObjectHideFlags: 0
@@ -2917,7 +2919,7 @@ GameObject:
   - component: {fileID: 1589358827}
   - component: {fileID: 1589358829}
   - component: {fileID: 1589358828}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Attic_Roof_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3439,7 +3441,7 @@ GameObject:
   - component: {fileID: 1733702753}
   - component: {fileID: 1733702755}
   - component: {fileID: 1733702754}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Attic_WallL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3566,6 +3568,37 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1774209373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774209374}
+  m_Layer: 0
+  m_Name: ReturnAfterStoryA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1774209374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774209373}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.7, y: -3.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1777562477
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,3 +4443,4 @@ SceneRoots:
   - {fileID: 1469691205}
   - {fileID: 1568292808}
   - {fileID: 1659389949}
+  - {fileID: 1774209374}

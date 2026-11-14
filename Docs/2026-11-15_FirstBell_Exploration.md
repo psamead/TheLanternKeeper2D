@@ -1,5 +1,7 @@
 # First bell exploration and EndCard position — 2026-11-15
 
+> Superseded behavior: see `Docs/2026-11-15_Pickup_Story_Attic.md` for the later pickup + Story A gate, bell-duration hints and safe attic/audio flow. This file records the earlier round.
+
 Source: LAN `CommandForAgentToInitialRun/2026-11-15_Unity_FirstBell_Exploration_EndCard.md`.
 Baseline: `a84fa6814ddd7f52693b1c6322c65fc88fcfd35f`.
 

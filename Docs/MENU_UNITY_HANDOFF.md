@@ -80,3 +80,12 @@ Scene: 00_StartMenu
 - `MenuMusic` 在 Start Menu 播放 80 秒循环音乐和 60 秒循环海风；两者淡入 2 秒。Play 确认音播放完后，音乐与环境声淡出约 1 秒，再加载 `01_Home`。
 - OGG 导入设置：BGM/ambience 为 Streaming、Vorbis 70、立体声；BGM 后台加载。SFX 为 Decompress On Load、Vorbis 70、预加载、立体声。Start Menu 仅 Main Camera 有一个 AudioListener。
 - Editor Play Mode 已验证 Play 过渡到 `01_Home`、Escape 返回 `00_StartMenu`，并观察两路音乐源运行。没有物理扬声器听测、80 秒循环点人工监听或独立构建。
+
+
+## 2026-11-15 — Pickup/story/attic follow-up (supersedes first-bell round 1)
+
+Exploration now starts only after pickup AND Story A completion. A ends under black and returns Maela grounded at the door (-4.7,-3.2 anchor), stage zero. First E retains fixed hints through the full bell, fades them over .5 s, retires exploration colliders, then arms the independent ladder. The attic has a continuous shared floor and Ground boundaries; landing anchor (4.7,2.725), observed first visible root (4.7,2.7288), grounded. A/B page cues use separate wave/wind stems and preserve ArMorDu continuity; B5 keeps music/wind. Current backgrounds and EndCard placement are preserved.
+
+Detailed implementation, cue table, validation, evidence/hash and limits: `Docs/2026-11-15_Pickup_Story_Attic.md`. Full normal-speed 1920×1080 video with audio and frame review delivered to shared `ForDesignScreenshot/2026-11-15_Home_Pickup_Story_Attic/after/`. Edge cases, natural/skip/advance A, full route, attic boundaries, audio page state and natural/skip B5 passed. Subjective listening and placement approval remain with the owner. Temporary test assets and local capture file removed.
+
+Final Editor verification: Edit Mode, not compiling, exactly one clean `00_StartMenu`, zero runtime Player/GameState objects, temporary test scripts absent. Editor 已回到只开 00_StartMenu。

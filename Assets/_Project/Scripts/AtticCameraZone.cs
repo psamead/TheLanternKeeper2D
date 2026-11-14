@@ -17,6 +17,8 @@ public sealed class AtticCameraZone : MonoBehaviour
     private float roomOrthographicSize;
     private Vector3 roomTargetOffset;
     private PlayerController playerInside;
+    private bool latched;
+    public void LatchAttic() { latched = true; SetAtticFraming(true); }
 
     private void Awake()
     {
@@ -47,7 +49,7 @@ public sealed class AtticCameraZone : MonoBehaviour
     {
         if (!playerInside || other.GetComponentInParent<PlayerController>() != playerInside) return;
         playerInside = null;
-        SetAtticFraming(false);
+        if (!latched) SetAtticFraming(false);
     }
 
     public void SetAtticFraming(bool attic)

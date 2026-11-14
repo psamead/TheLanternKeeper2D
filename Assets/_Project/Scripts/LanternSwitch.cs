@@ -37,7 +37,7 @@ public sealed class LanternSwitch : MonoBehaviour
     /// <summary>Shared entry point for E and deterministic in-Editor interaction checks.</summary>
     public bool RequestSwitch()
     {
-        if (bellPlaying || StoryboardPlayer.AnyPlaybackActive || (player && player.ControlsLocked) ||
+        if (bellPlaying || StoryboardPlayer.BlocksGameplayInput || (player && player.ControlsLocked) ||
             !player || !player.isActiveAndEnabled || player.LanternLocked ||
             GameState.Instance == null || !GameState.Instance.CanUseLantern) return false;
         GameState.Instance.RecordFirstBell();
@@ -58,7 +58,16 @@ public sealed class LanternSwitch : MonoBehaviour
         if (first && player) player.SetControlLock(PlayerController.ControlLock.LanternBell, true);
         if (!first) ChangeWorld(targetMemory);
         yield return new WaitForSecondsRealtime(Mathf.Max(0.1f, bellDuration));
-        if (first) ChangeWorld(targetMemory);
+        if (first)
+        {
+            ChangeWorld(targetMemory);
+            var hints = FindFirstObjectByType<FirstBellExplorationHints>();
+            if (hints) yield return hints.ExitTutorial();
+            // The ladder sprite fades independently; do not arm its trigger before it is visible.
+            var ladder = FindFirstObjectByType<LadderAtticTransition>();
+            if (ladder) yield return ladder.WaitForVisibleLadder();
+            GameState.Instance.CompleteTutorial();
+        }
         if (first && player) player.SetControlLock(PlayerController.ControlLock.LanternBell, false);
         bellPlaying = false;
     }

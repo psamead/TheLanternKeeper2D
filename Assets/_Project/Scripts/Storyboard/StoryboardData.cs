@@ -7,8 +7,20 @@ using TMPro;
 public class StoryboardData : ScriptableObject
 {
     [System.Serializable]
+    public class AudioCue
+    {
+        public bool enabled;
+        [Range(0f, 1f)] public float musicVolume = 0.6f;
+        [Tooltip("Negative preserves current gain. Use only for an intentional opening swell.")]
+        public float musicStartVolume = -1f;
+        public AudioClip ambience;
+        [Range(0f, 1f)] public float ambienceVolume = 0.4f;
+        [Min(0f)] public float fadeSeconds = 1f;
+    }
+    [System.Serializable]
     public class Frame
     {
+        public AudioCue audioCue = new AudioCue();
         public Sprite image;                       // still image (Ken Burns)
         public VideoClip video;                    // optional; if set, plays instead of the image (Flow shots)
         [TextArea(2, 4)] public string caption;

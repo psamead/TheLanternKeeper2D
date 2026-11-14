@@ -21,6 +21,11 @@ public class StoryboardPlayer : MonoBehaviour
     public bool playOnStart = true;
     public bool fadeBackAtEnd;
     public System.Action onFinished;
+    public System.Func<IEnumerator> onFinishUnderBlack;
+    public AudioSource localMusic;
+    private StoryboardAudio pageAudio;
+    private static int finishedFrame = -1;
+    public static bool BlocksGameplayInput => AnyPlaybackActive || Time.frameCount <= finishedFrame + 1;
 
     public static bool AnyPlaybackActive { get; private set; }
     public bool IsPlaying { get; private set; }
@@ -37,6 +42,7 @@ public class StoryboardPlayer : MonoBehaviour
 
     void Awake()
     {
+        pageAudio = gameObject.AddComponent<StoryboardAudio>();
         baseCaptionFontSize = captionText.fontSize;
         baseCaptionColor = captionText.color;
         baseCaptionMaterial = captionText.fontSharedMaterial;
@@ -86,6 +92,7 @@ public class StoryboardPlayer : MonoBehaviour
     {
         if (data == null || data.frames == null || data.frames.Length == 0) return;
         var frame = data.frames[data.frames.Length - 1];
+        pageAudio.Apply(frame.audioCue, localMusic);
         layerA.texture = frame.image ? frame.image.texture : null;
         layerA.transform.SetSiblingIndex(Mathf.Max(layerA.transform.GetSiblingIndex(), layerB.transform.GetSiblingIndex()));
         KenBurns(layerA, frame, 1f);
@@ -111,6 +118,7 @@ public class StoryboardPlayer : MonoBehaviour
             CurrentFrameIndex = i;
             CurrentFrameElapsed = 0f;
             var f = data.frames[i]; skipFrame = false;
+            pageAudio.Apply(f.audioCue, localMusic);
             bool isVideo = f.video != null && videoPlayer != null;
             if (isVideo)
             {
@@ -157,16 +165,29 @@ public class StoryboardPlayer : MonoBehaviour
             }
 #endif
             if (isVideo) videoPlayer.Stop();
-            captionGroup.alpha = 0;
+            if (i < data.frames.Length - 1 && !skipAll) captionGroup.alpha = 0;
         }
+        if (skipAll && data.frames.Length > 0) pageAudio.Apply(data.frames[data.frames.Length - 1].audioCue, localMusic);
         yield return Fade(blackFade, blackFade.alpha, 1, 0.8f);
-        if (fadeBackAtEnd)
+        if (onFinishUnderBlack != null)
+            yield return onFinishUnderBlack();
+        else if (fadeBackAtEnd)
             yield return Fade(blackFade, 1, 0, 0.6f);
         IsPlaying = false;
         AnyPlaybackActive = false;
+        finishedFrame = Time.frameCount;
         WasSkipped = skipAll;
         onFinished?.Invoke();
         if (!string.IsNullOrEmpty(data.nextScene)) SceneLoader.Load(data.nextScene);
+    }
+
+    public IEnumerator RevealHomeUnderBlack()
+    {
+        // Keep only the black overlay; remove the old images, backdrop, captions and input hint together.
+        foreach (var graphic in layerA.transform.parent.GetComponentsInChildren<Graphic>(true))
+            if (!graphic.transform.IsChildOf(blackFade.transform)) graphic.enabled = false;
+        yield return null;
+        yield return Fade(blackFade, 1f, 0f, 0.6f);
     }
 
     static void KenBurns(RawImage img, StoryboardData.Frame f, float u)

@@ -92,6 +92,12 @@ public sealed class AudioManager : MonoBehaviour
         musicFade = StartCoroutine(CrossfadeMusic(musicVoice, clip, vol, fade));
     }
 
+    public void SetNarrativeMusicVolume(float volume, float fade)
+    {
+        // Gain-only change: retain the active clip, voice and sample position.
+        PlayMusic(musicSources[musicVoice].clip, volume, fade);
+    }
+
     public void SetMusicDucked(bool ducked)
     {
         if (musicDuckFade != null) StopCoroutine(musicDuckFade);

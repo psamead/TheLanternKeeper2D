@@ -38,7 +38,9 @@ public sealed class LanternSwitch : MonoBehaviour
     public bool RequestSwitch()
     {
         if (bellPlaying || StoryboardPlayer.AnyPlaybackActive || (player && player.ControlsLocked) ||
-            GameState.Instance == null || !GameState.Instance.HasLantern) return false;
+            !player || !player.isActiveAndEnabled || player.LanternLocked ||
+            GameState.Instance == null || !GameState.Instance.CanUseLantern) return false;
+        GameState.Instance.RecordFirstBell();
         var hint = FindFirstObjectByType<LanternProgressHint>();
         if (hint) hint.Hide();
         StartCoroutine(SwitchWorld());

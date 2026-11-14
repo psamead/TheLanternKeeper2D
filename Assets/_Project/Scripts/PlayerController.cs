@@ -104,7 +104,8 @@ public class PlayerController : MonoBehaviour
 
     public bool RaiseLantern(bool lockAll)
     {
-        if (GameState.Instance == null || !GameState.Instance.HasLantern || !grounded || lanternActionActive || !animator)
+        if (GameState.Instance == null || !GameState.Instance.CanUseLantern || ControlsLocked ||
+            StoryboardPlayer.AnyPlaybackActive || !grounded || lanternActionActive || !animator)
             return false;
 
         lanternActionActive = true;

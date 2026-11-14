@@ -85,8 +85,7 @@ public sealed class LanternPickupInteractable : MonoBehaviour
         }
         if (storyboardA && storyboardA.layerA)
             storyboardA.layerA.transform.root.gameObject.SetActive(false);
-        var hint = sharedHint ? sharedHint : FindFirstObjectByType<LanternProgressHint>();
-        if (hint) hint.Show();
+        if (GameState.Instance) GameState.Instance.CompleteStoryA();
     }
 
     private void OnDisable() { if (sharedHint) sharedHint.HideFor(this); }

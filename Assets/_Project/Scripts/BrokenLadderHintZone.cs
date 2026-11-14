@@ -1,58 +1,27 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Present-world information at the empty ladder position.</summary>
+/// <summary>One physical entry advances one ordered exploration step, independent of pickup.</summary>
 [RequireComponent(typeof(BoxCollider2D))]
 public sealed class BrokenLadderHintZone : MonoBehaviour
 {
-    [SerializeField] private LanternFlowText flowText;
-    private LanternProgressHint hint;
-    private PlayerController nearby;
+    [SerializeField] private bool discovery;
+    private readonly HashSet<Collider2D> contacts = new HashSet<Collider2D>();
 
-    private void Awake()
-    {
-        GetComponent<BoxCollider2D>().isTrigger = true;
-        hint = FindFirstObjectByType<LanternProgressHint>();
-    }
-
-    private void OnEnable()
-    {
-        if (GameState.Instance) GameState.Instance.OnWorldSwitched += OnWorldSwitched;
-    }
-
-    private void OnDisable()
-    {
-        if (GameState.Instance) GameState.Instance.OnWorldSwitched -= OnWorldSwitched;
-        if (hint) hint.HideFor(this);
-        nearby = null;
-    }
+    private void Awake() => GetComponent<BoxCollider2D>().isTrigger = true;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         var player = other.GetComponentInParent<PlayerController>();
         if (!player) return;
-        nearby = player;
-        Show();
+        // Track occupancy even while locked or out of order. Another child entering,
+        // or an unlock while still inside, must never count as a fresh visit.
+        contacts.RemoveWhere(c => !c || !c.isActiveAndEnabled);
+        bool freshEntry = contacts.Count == 0;
+        if (!contacts.Add(other) || !freshEntry) return;
+        if (GameState.Instance) GameState.Instance.RecordExploration(discovery, player);
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (nearby && other.GetComponentInParent<PlayerController>() == nearby)
-        {
-            nearby = null;
-            if (hint) hint.HideFor(this);
-        }
-    }
-
-    private void OnWorldSwitched(bool isMemory)
-    {
-        if (isMemory && hint) hint.HideFor(this);
-        else if (!isMemory) Show();
-    }
-
-    private void Show()
-    {
-        if (!nearby || !flowText || (GameState.Instance && GameState.Instance.MemoryLayer)) return;
-        if (!hint) hint = FindFirstObjectByType<LanternProgressHint>();
-        if (hint) hint.ShowFor(this, flowText.brokenLadderHint, float.PositiveInfinity, 5);
-    }
+    private void OnTriggerExit2D(Collider2D other) => contacts.Remove(other);
+    private void OnDisable() => contacts.Clear();
 }

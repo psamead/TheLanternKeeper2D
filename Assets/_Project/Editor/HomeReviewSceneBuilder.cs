@@ -135,14 +135,12 @@ public static class HomeReviewSceneBuilder
 
         DestroyIfFound("Ladder_Broken");
         DestroyIfFound("PickupPrompt");
-        var flowText = AssetDatabase.LoadAssetAtPath<LanternFlowText>("Assets/_Project/Data/Storyboard/LanternFlowText.asset");
         var broken = GetOrCreate("BrokenLadderHintZone");
         broken.transform.position = new Vector3(2.8f, -2.9f, 0f);
         var brokenCollider = Ensure<BoxCollider2D>(broken);
         brokenCollider.isTrigger = true;
         brokenCollider.size = new Vector2(1.6f, 1.3f);
-        var brokenHint = Ensure<BrokenLadderHintZone>(broken);
-        SetSerialized(brokenHint, "flowText", flowText);
+        Ensure<BrokenLadderHintZone>(broken);
         Ensure<WorldLayerObject>(broken).mode = WorldLayerMode.Present;
 
         var lanternSprite = AssetDatabase.LoadAssetAtPath<Sprite>(Art + "Lantern_v4.png");

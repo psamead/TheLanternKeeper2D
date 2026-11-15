@@ -19,6 +19,9 @@ public sealed class EndCardController : MonoBehaviour
     [SerializeField] private LanternFlowText flowText;
     [SerializeField] private AudioSource storyboardMusic;
     private int selectedIndex;
+    private int buttonsShownFrame;
+    private bool optionsReady;
+    private bool returningToMenu;
 
     private void Awake()
     {
@@ -36,7 +39,19 @@ public sealed class EndCardController : MonoBehaviour
 
     private void Update()
     {
-        if (!buttonsRoot || !buttonsRoot.activeInHierarchy || Keyboard.current == null) return;
+        if (!buttonsRoot || !buttonsRoot.activeInHierarchy) return;
+        if (!optionsReady)
+        {
+            // Release the story's advance/skip input before accepting a fresh option action.
+            if (Time.frameCount <= buttonsShownFrame + 1 ||
+                (Keyboard.current != null && Keyboard.current.anyKey.isPressed) ||
+                (Mouse.current != null && Mouse.current.leftButton.isPressed)) return;
+            optionsReady = true;
+            if (backButton) backButton.interactable = true;
+            if (quitButton) quitButton.interactable = true;
+            return;
+        }
+        if (Keyboard.current == null) return;
         if (Keyboard.current.upArrowKey.wasPressedThisFrame || Keyboard.current.wKey.wasPressedThisFrame ||
             Keyboard.current.downArrowKey.wasPressedThisFrame || Keyboard.current.sKey.wasPressedThisFrame)
             Select(1 - selectedIndex);
@@ -96,6 +111,7 @@ public sealed class EndCardController : MonoBehaviour
         {
             storyboard.playOnStart = false;
             storyboard.localMusic = storyboardMusic;
+            storyboard.holdFinalFrameOnFinish = true;
             storyboard.onFinished = ShowButtons;
             storyboard.StartCoroutine(storyboard.Play());
         }
@@ -106,10 +122,13 @@ public sealed class EndCardController : MonoBehaviour
     {
         if (storyboard)
         {
-            if (storyboard.WasSkipped) storyboard.ShowFinalFrame();
             storyboard.blackFade.alpha = 0f;
-            if (!storyboard.WasSkipped) storyboard.captionGroup.alpha = 1f;
+            storyboard.captionGroup.alpha = 1f;
         }
+        buttonsShownFrame = Time.frameCount;
+        optionsReady = false;
+        if (backButton) backButton.interactable = false;
+        if (quitButton) quitButton.interactable = false;
         if (buttonsRoot) buttonsRoot.SetActive(true);
         if (advanceHint) advanceHint.gameObject.SetActive(false);
         Select(0);
@@ -117,11 +136,13 @@ public sealed class EndCardController : MonoBehaviour
 
     public void BackToMenu()
     {
+        if (!optionsReady || returningToMenu) return;
+        returningToMenu = true;
         GameState.ResetForMenu();
         SceneManager.LoadScene("00_StartMenu", LoadSceneMode.Single);
     }
 
-    public void Quit() => Application.Quit();
+    public void Quit() => BackToMenu();
 }
 
 public sealed class EndCardItemHover : MonoBehaviour, IPointerEnterHandler

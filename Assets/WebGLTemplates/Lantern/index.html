@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Lantern Keeper</title>
+  <style>
+    html,body { margin:0; width:100%; height:100%; background:#101b28; overflow:hidden; }
+    body { display:flex; align-items:center; justify-content:center; }
+    #game { width:min(100vw,177.7778vh); aspect-ratio:16/9; position:relative; }
+    canvas { width:100%; height:100%; display:block; outline:none; background:#101b28; }
+    #loading { position:absolute; inset:0; display:flex; flex-direction:column; gap:16px;
+      align-items:center; justify-content:center; color:#f2ebdd; font:20px Georgia,serif; }
+    progress { width:240px; max-width:70%; accent-color:#e8b45a; }
+    #error { white-space:pre-wrap; max-width:80%; }
+  </style>
+</head>
+<body>
+  <main id="game">
+    <canvas id="unity-canvas" width="1920" height="1080" tabindex="0" aria-label="The Lantern Keeper game"></canvas>
+    <div id="loading"><span>Loading The Lantern Keeper…</span><progress id="progress" max="1" value="0"></progress><span id="error"></span></div>
+  </main>
+  <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+  <script>
+    const canvas = document.getElementById('unity-canvas');
+    canvas.addEventListener('pointerdown', () => canvas.focus());
+    createUnityInstance(canvas, {
+      dataUrl: 'Build/{{{ DATA_FILENAME }}}',
+      frameworkUrl: 'Build/{{{ FRAMEWORK_FILENAME }}}',
+      codeUrl: 'Build/{{{ CODE_FILENAME }}}',
+      streamingAssetsUrl: 'StreamingAssets',
+      companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2)
+    }, value => document.getElementById('progress').value = value).then(instance => {
+      document.getElementById('loading').hidden = true;
+      document.getElementById('loading').style.display = 'none';
+      canvas.focus();
+    }).catch(error => {
+      document.getElementById('error').textContent = 'The game could not load. Please refresh to try again.';
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

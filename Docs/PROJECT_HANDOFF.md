@@ -122,3 +122,7 @@ Detailed implementation, cue table, validation, evidence/hash and limits: `Docs/
 Final Editor verification: Edit Mode, not compiling, exactly one clean `00_StartMenu`, zero runtime Player/GameState objects, temporary test scripts absent. Editor 已回到只开 00_StartMenu。
 
 Knowledge base index and current-state summary: `D:\MyObsidian\NoteBookmark\TheLanternKeeper2D\Knowledge Base Index.md` and `The Lantern Keeper 2D Current Handoff.md`.
+
+## 2026-11-15 — Raised attic baseline and direct B5 options
+
+Current follow-up: `Docs/2026-11-15_Attic_EndCard_Release.md`. Attic physical floor/landing Y is now 3.295 (+0.57), with a matching raised window trigger. Identical-camera measurement places visible boots at 84.985% of viewport height from the top. B5 retains its image/caption/pose when options appear, and both EndCard options reset the session and return to Start Menu. Start Menu Quit is unchanged. Editor regression, full route, natural/skip/advance B5 and mouse/keyboard options passed. Windows/Web export and Pages delivery are tracked separately in that report.

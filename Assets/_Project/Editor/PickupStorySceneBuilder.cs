@@ -8,6 +8,26 @@ using UnityEngine.SceneManagement;
 /// <summary>Focused authoring for the pickup gate, supported landings and narrative audio cues.</summary>
 public static class PickupStorySceneBuilder
 {
+    public const float AtticFloorSurfaceY = 3.295f;
+
+    [MenuItem("Tools/Lantern Keeper/Apply Attic Walking Baseline")]
+    public static void ApplyAtticBaseline()
+    {
+        if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+            if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before applying.");
+        var home = EditorSceneManager.OpenScene("Assets/_Project/Scenes/01_Home.unity", OpenSceneMode.Single);
+        var all = home.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).ToArray();
+        all.Single(t => t.name == "AtticLanding").position = new Vector3(4.7f, AtticFloorSurfaceY, 0f);
+        var floor = all.Single(t => t.name == "Attic_Floor_Right");
+        floor.position = new Vector3(6f, AtticFloorSurfaceY - 0.175f, 0f);
+        var window = all.Single(t => t.name == "EndTrigger_AtticWindow");
+        window.position = new Vector3(window.position.x, 3.82f, window.position.z);
+        EditorSceneManager.MarkSceneDirty(home);
+        EditorSceneManager.SaveScene(home);
+        EditorSceneManager.OpenScene("Assets/_Project/Scenes/00_StartMenu.unity", OpenSceneMode.Single);
+    }
+
     [MenuItem("Tools/Lantern Keeper/Apply Pickup Story Attic Safety")]
     public static void Apply()
     {
@@ -24,10 +44,12 @@ public static class PickupStorySceneBuilder
         var serialized = new SerializedObject(pickup);
         serialized.FindProperty("returnAfterStoryA").objectReferenceValue = anchor;
         serialized.ApplyModifiedPropertiesWithoutUndo();
-        Find("AtticLanding").position = new Vector3(4.7f, 2.725f, 0f);
+        Find("AtticLanding").position = new Vector3(4.7f, AtticFloorSurfaceY, 0f);
         var floor = Find("Attic_Floor_Right").GetComponent<BoxCollider2D>();
         // Existing artwork is untouched. Extend one physical floor across the former ladder hole.
-        floor.transform.position = new Vector3(6f, 2.55f, 0f);
+        floor.transform.position = new Vector3(6f, AtticFloorSurfaceY - 0.175f, 0f);
+        var window = Find("EndTrigger_AtticWindow");
+        window.position = new Vector3(window.position.x, 3.82f, window.position.z);
         floor.size = new Vector2(8.4f / Mathf.Abs(floor.transform.lossyScale.x),
             0.35f / Mathf.Abs(floor.transform.lossyScale.y));
         Find("Attic_Floor_Left").GetComponent<Collider2D>().enabled = false;

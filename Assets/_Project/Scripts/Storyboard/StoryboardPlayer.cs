@@ -20,6 +20,7 @@ public class StoryboardPlayer : MonoBehaviour
     public RenderTexture videoTexture;           // 1920x1080
     public bool playOnStart = true;
     public bool fadeBackAtEnd;
+    [System.NonSerialized] public bool holdFinalFrameOnFinish;
     public System.Action onFinished;
     public System.Func<IEnumerator> onFinishUnderBlack;
     public AudioSource localMusic;
@@ -101,6 +102,8 @@ public class StoryboardPlayer : MonoBehaviour
         ApplyCaptionLayout(frame);
         captionText.text = frame.caption;
         captionGroup.alpha = 1f;
+        front = layerA; back = layerB;
+        CurrentFrameIndex = data.frames.Length - 1;
     }
 
     public IEnumerator Play()
@@ -168,11 +171,21 @@ public class StoryboardPlayer : MonoBehaviour
             if (i < data.frames.Length - 1 && !skipAll) captionGroup.alpha = 0;
         }
         if (skipAll && data.frames.Length > 0) pageAudio.Apply(data.frames[data.frames.Length - 1].audioCue, localMusic);
-        yield return Fade(blackFade, blackFade.alpha, 1, 0.8f);
-        if (onFinishUnderBlack != null)
-            yield return onFinishUnderBlack();
-        else if (fadeBackAtEnd)
-            yield return Fade(blackFade, 1, 0, 0.6f);
+        if (holdFinalFrameOnFinish)
+        {
+            // EndCard keeps the visible last-page pose. Skipping earlier pages lands on B5 once.
+            if (CurrentFrameIndex < data.frames.Length - 1) ShowFinalFrame();
+            blackFade.alpha = 0f;
+            captionGroup.alpha = 1f;
+        }
+        else
+        {
+            yield return Fade(blackFade, blackFade.alpha, 1, 0.8f);
+            if (onFinishUnderBlack != null)
+                yield return onFinishUnderBlack();
+            else if (fadeBackAtEnd)
+                yield return Fade(blackFade, 1, 0, 0.6f);
+        }
         IsPlaying = false;
         AnyPlaybackActive = false;
         finishedFrame = Time.frameCount;

@@ -126,3 +126,11 @@ Knowledge base index and current-state summary: `D:\MyObsidian\NoteBookmark\TheL
 ## 2026-11-15 — Raised attic baseline and direct B5 options
 
 Current follow-up: `Docs/2026-11-15_Attic_EndCard_Release.md`. Attic physical floor/landing Y is now 3.295 (+0.57), with a matching raised window trigger. Identical-camera measurement places visible boots at 84.985% of viewport height from the top. B5 retains its image/caption/pose when options appear, and both EndCard options reset the session and return to Start Menu. Start Menu Quit is unchanged. Editor regression, full route, natural/skip/advance B5 and mouse/keyboard options passed. Windows/Web export and Pages delivery are tracked separately in that report.
+
+### Release outcome
+
+Game source `6adac6ca9d5532c9f646defca38c94255e55070c` and Pages workflow `1fb2df14a6c4ca316690375fc2449725c2c978f0` pushed. Windows/Web non Development builds succeeded from an isolated export of the game source. Complete packages/ZIPs/BuildReports/hashes: shared `DemoBuilds/2026-11-15_FinalDemo/`. Windows EXE startup passed, but capture timed out; Windows gameplay and EndCard controls remain unverified.
+
+Live Web: https://psamead.github.io/TheLanternKeeper2D/ . Actual HTTPS natural route to B5, both returns, reset, story advance/Skip, attic controls and refresh passed in Chrome. [Deployment run](https://github.com/psamead/TheLanternKeeper2D/actions/runs/43675728069). Browser audio activated; subjective listening and owner approval pending.
+
+Evidence: shared `ForDesignScreenshot/2026-11-15_AtticBaseline_EndCard_Release/after/`. Verified duplicate captures remain locally in ignored `_CodexCaptures/2026-11-15_AtticBaseline_EndCard_Release/` because automatic approval review blocked deletion. Browser/server stopped. Editor 已回到只开 00_StartMenu。

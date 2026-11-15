@@ -120,3 +120,5 @@ Exploration now starts only after pickup AND Story A completion. A ends under bl
 Detailed implementation, cue table, validation, evidence/hash and limits: `Docs/2026-11-15_Pickup_Story_Attic.md`. Full normal-speed 1920×1080 video with audio and frame review delivered to shared `ForDesignScreenshot/2026-11-15_Home_Pickup_Story_Attic/after/`. Edge cases, natural/skip/advance A, full route, attic boundaries, audio page state and natural/skip B5 passed. Subjective listening and placement approval remain with the owner. Temporary test assets and local capture file removed.
 
 Final Editor verification: Edit Mode, not compiling, exactly one clean `00_StartMenu`, zero runtime Player/GameState objects, temporary test scripts absent. Editor 已回到只开 00_StartMenu。
+
+Knowledge base index and current-state summary: `D:\MyObsidian\NoteBookmark\TheLanternKeeper2D\Knowledge Base Index.md` and `The Lantern Keeper 2D Current Handoff.md`.
